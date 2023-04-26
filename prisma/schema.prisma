@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-  id                   String      @id
-  firstName            String
-  lastName             String
-  email                String?  @unique
+  id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName            String?
+  lastName             String?
+  email                String      @unique
   phone                String?
-  gender               String
-  preferredPosition    String
-  skillLevel           String
-  status               String
-  address1             String
+  gender               String?
+  preferredPosition    String?
+  skillLevel           String?
+  status               String?
+  address1             String?
   address2             String?
-  city                 String
+  city                 String?
   state                String?
-  zip                  Int
+  zip                  Int?
   birthDate            String?
-  captainInterest      Boolean
+  captainInterest      Boolean?
 }
 
 enum UserSkillOptions {

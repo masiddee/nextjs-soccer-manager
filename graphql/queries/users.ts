@@ -1,7 +1,6 @@
-'use strict'
-// import { users } from '../../data/users';
+'use strict';
 import prisma from '../../lib/prisma';
-import { baseUserDetails } from '../utils/helpers';
+import {baseUserDetails} from '../utils/helpers';
 
 export const userTypeDefs = `#graphql
   type Query {
@@ -63,12 +62,12 @@ export const userTypeDefs = `#graphql
     ${baseUserDetails}
     email: String!
     phone: String
-    address1: String!
+    address1: String
     address2: String
-    city: String!
-    state: String!
-    zip: Int!
-    birthDate: String!
+    city: String
+    state: String
+    zip: Int
+    birthDate: String
     preferredPosition: String
     skillLevel: UserSkillOptions
     captainInterest: Boolean
@@ -77,20 +76,20 @@ export const userTypeDefs = `#graphql
     modifiedAt: Int
     modifiedBy: String
   }
-`
+`;
 
 export const userResolvers = {
   Query: {
-    getUser: async (parent: any, { userId }: any, context: any, info: any) => {
-      // const user = users.find(_ => _.id === userId);
+    getUser: async (parent: any, {userId}: any, context: any, info: any) => {
       const user = prisma.user.findFirst({
-        where: {id: userId}
-      })
+        where: {id: userId},
+      });
 
       return user;
     },
-    getAllUsers: () => prisma.user.findMany()
+    getAllUsers: () => prisma.user.findMany(),
   },
-}
-
-// module.exports = {typeDefs: userTypeDefs, resolvers: userResolvers}
+  // Mutation: {
+  //   signUp: async (email: any) => {}
+  // }
+};

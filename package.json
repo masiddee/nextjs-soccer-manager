@@ -11,6 +11,8 @@
     "prisma:seed": "npx prisma db seed"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.12",
+    "@auth0/nextjs-auth0": "^2.5.0",
     "@prisma/client": "^4.12.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.3.0",
