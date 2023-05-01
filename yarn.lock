@@ -416,6 +416,11 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
+"@types/auth0@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@types/auth0/-/auth0-3.3.2.tgz#b3a343d1c5789660578df50bdf0236f64fe7325b"
+  integrity sha512-lnZKcXQar1SGYsOkQuHFM4OONlqJyN10h3+BD670IbxW/qFHCaul1rcJeE89RfzA3oF3WXl8sS/Rrazu2KHagQ==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"

@@ -1,9 +1,13 @@
 import prisma from '../../../lib/prisma';
 import {Prisma} from '@prisma/client';
 import type {NextApiRequest, NextApiResponse} from 'next';
+import {UserData} from 'auth0';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {email, secret} = req.body;
+type RequestBodyAuth0User = UserData & {secret: string};
+
+const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const {email, secret, given_name, family_name} =
+    req.body as RequestBodyAuth0User;
 
   if (req.method !== 'POST') {
     return res.status(403).json({message: 'Method not allowed'});
@@ -15,7 +19,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (email) {
     await prisma.user.create({
-      data: {email} as Prisma.UserCreateInput,
+      data: {
+        email,
+        firstName: given_name,
+        lastName: family_name,
+      } as Prisma.UserCreateInput,
     });
     return res.status(200).json({
       message: `User with email: ${email} has been created successfully!`,
@@ -23,4 +31,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default loginHandler;
