@@ -1,17 +1,17 @@
 'use strict';
 import prisma from '../../lib/prisma';
-import {baseUserDetails} from '../utils/helpers';
+import {baseUser} from '../utils/helpers';
 
 export const userTypeDefs = `#graphql
   type Query {
-    getUser(userId: ID!): UserDetails!
-    getAllUsers: [UserDetails]!
+    getUser(userId: ID!): User!
+    getAllUsers: [User]!
   }
 
-  # type Mutation {
-  #   signUp(email: String!): ID!
-  #   updateUser(userId: ID!, userInput: UserInput): UserDetails!
-  # }
+  type Mutation {
+    signUp(email: String!): ID!
+    # updateUser(userId: ID!, userInput: UserInput): User!
+  }
 
   input UserInput {
     email: String!
@@ -57,9 +57,9 @@ export const userTypeDefs = `#graphql
     WINGER
   }
 
-  type UserDetails {
-    id: ID!
-    ${baseUserDetails}
+  type User {
+    id: Int!
+    ${baseUser}
     email: String!
     phone: String
     address1: String
@@ -71,10 +71,8 @@ export const userTypeDefs = `#graphql
     preferredPosition: String
     skillLevel: UserSkillOptions
     captainInterest: Boolean
-    createdAt: Int
-    createdBy: String
-    modifiedAt: Int
-    modifiedBy: String
+    createdAt: String
+    createdBy: User
   }
 `;
 
@@ -89,7 +87,9 @@ export const userResolvers = {
     },
     getAllUsers: () => prisma.user.findMany(),
   },
-  // Mutation: {
-  //   signUp: async (email: any) => {}
-  // }
+  Mutation: {
+    signUp: async (email: any) => {
+      console.log('TEST');
+    },
+  },
 };

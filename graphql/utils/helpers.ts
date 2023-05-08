@@ -1,8 +1,8 @@
 'use strict';
 
-export const baseUserDetails = `
-  firstName: String!
+export const baseUser = `
+  firstName: String
   lastName: String
-  gender: String!
+  gender: String
   status: String
-`
+`;

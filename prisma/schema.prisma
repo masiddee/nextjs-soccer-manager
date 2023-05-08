@@ -10,11 +10,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Team {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  captainId            Int
+  roster               User[]
+  rosterMax            Int      @default(16)
+  rosterMin            Int      @default(0)
+  feeStatus            TeamFeeStatus
+  division             Division
+  wins                 Int      @default(0)
+  losses               Int      @default(0)
+  draws                Int      @default(0)
+  pointsFor            Int      @default(0)
+  pointsAgainst        Int      @default(0)
+  createdAt            DateTime @default(now())
+  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
+  createdById          Int
+}
+
+enum Division {
+  D1
+  D2
+  D3
+}
+
+enum TeamFeeStatus {
+  UNPAID
+  PAID
+  PARTIAL
+  REFUNDED
+}
+
 model User {
-  id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                   Int      @id @default(autoincrement())
   firstName            String?
   lastName             String?
-  email                String      @unique
+  email                String   @unique
   phone                String?
   gender               String?
   preferredPosition    String?
@@ -27,31 +59,33 @@ model User {
   zip                  Int?
   birthDate            String?
   captainInterest      Boolean?
+  teams                Team[]
+  createdTeams         Team[]    @relation("CreatedBy")
 }
 
 enum UserSkillOptions {
-    BEGINNER
-    INTERMEDIATE
-    ADVANCED
-  }
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
 
-  enum UserAccountStatus {
-    INVITED
-    JOINED
-    DECLINED
-    CAPTAIN
-  }
+enum UserAccountStatus {
+  INVITED
+  JOINED
+  DECLINED
+  CAPTAIN
+}
 
-  enum UserGenderOptions {
-    MALE
-    FEMALE
-    OTHER
-  }
+enum UserGenderOptions {
+  MALE
+  FEMALE
+  OTHER
+}
 
-  enum PreferredPositionOptions {
-    GOALIE
-    DEFENDER
-    MIDFIELDER
-    STRIKER
-    WINGER
-  }
+enum PreferredPositionOptions {
+  GOALIE
+  DEFENDER
+  MIDFIELDER
+  STRIKER
+  WINGER
+}
