@@ -1,21 +1,35 @@
 'use strict';
 import {Prisma} from '@prisma/client';
 import prisma from '../../lib/prisma';
-import {baseUser} from '../utils/helpers.js';
 
 export const teamTypeDefs = `#graphql
   type Query {
-    # getTeam(teamId: ID!): Team
+    getTeam(teamId: Int!): Team
     getAllTeams: [Team]!
   }
 
   type Mutation {
-    createTeam(input: CreateTeamFields!): Team
+    createTeam(input: CreateTeamInput!): Team
+    addTeamMember(input: AddTeamMemberInput!): Team
+    updateTeam(input: TeamInput!): Team
   }
 
-  input CreateTeamFields {
+  input CreateTeamInput {
     name: String!
     captainId: Int!
+  }
+
+  input AddTeamMemberInput {
+    userId: Int!
+    teamId: Int!
+  }
+
+  input TeamInput {
+    name: String
+    captainId: Int
+    roster: [User]
+    feeStatus: TeamFeeStatus
+    division: Division
   }
 
   type Team {
@@ -63,10 +77,14 @@ export const teamTypeDefs = `#graphql
 
 export const teamResolvers = {
   Query: {
+    getTeam: (parent: any, {teamId}: any, context: any, info: any) =>
+      prisma.team.findFirst({
+        where: {id: teamId},
+      }),
     getAllTeams: () => prisma.team.findMany(),
   },
   Mutation: {
-    createTeam: async (parent: any, {input}: any, context: any, info: any) => {
+    createTeam: async (parent: any, {input}: any, context: any) => {
       const user = (await context).user;
 
       if (!user) {
@@ -87,5 +105,26 @@ export const teamResolvers = {
         data,
       });
     },
+    addTeamMember: async (parent: any, {input}: any, context: any) => {
+      const user = (await context).user;
+
+      if (!user) {
+        throw new Error('You need to be logged in to add a team member');
+      }
+
+      const {teamId, userId} = input;
+
+      return prisma.team.update({
+        where: {
+          id: teamId,
+        },
+        data: {
+          roster: {
+            connect: {id: userId},
+          },
+        },
+      });
+    },
+    updateTeam: async () => console.log('UPDATE TEAM!'),
   },
 };

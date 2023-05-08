@@ -4,17 +4,17 @@ import {baseUser} from '../utils/helpers';
 
 export const userTypeDefs = `#graphql
   type Query {
-    getUser(userId: ID!): User!
+    getUser(userId: Int!): User!
     getAllUsers: [User]!
   }
 
   type Mutation {
     signUp(email: String!): ID!
-    # updateUser(userId: ID!, userInput: UserInput): User!
+    updateUser(userId: Int!, userInput: UserInput): User!
   }
 
   input UserInput {
-    email: String!
+    # email: String
     firstName: String
     lastName: String
     gender: UserGenderOptions
@@ -78,18 +78,34 @@ export const userTypeDefs = `#graphql
 
 export const userResolvers = {
   Query: {
-    getUser: async (parent: any, {userId}: any, context: any, info: any) => {
-      const user = prisma.user.findFirst({
+    getUser: async (parent: any, {userId}: any, context: any, info: any) =>
+      prisma.user.findFirst({
         where: {id: userId},
-      });
-
-      return user;
-    },
+      }),
     getAllUsers: () => prisma.user.findMany(),
   },
   Mutation: {
-    signUp: async (email: any) => {
+    signUp: async () => {
       console.log('TEST');
+    },
+    updateUser: async (
+      parent: any,
+      {userId, userInput}: any,
+      context: any,
+      info: any,
+    ) => {
+      const user = (await context).user;
+
+      if (!user) {
+        throw new Error('You need to be logged in to update this user');
+      }
+
+      return prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {...userInput},
+      });
     },
   },
 };
