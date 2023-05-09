@@ -27,7 +27,7 @@ export const teamTypeDefs = `#graphql
   input TeamInput {
     name: String
     captainId: Int
-    roster: [User]
+    roster: [UserInput]
     feeStatus: TeamFeeStatus
     division: Division
   }
@@ -35,7 +35,7 @@ export const teamTypeDefs = `#graphql
   type Team {
     id: Int!
     name: String!
-    captainId: Int!
+    captain: User!
     roster: [User]
     rosterMax: Int!
     rosterMin: Int!
@@ -46,8 +46,12 @@ export const teamTypeDefs = `#graphql
     draws: Int
     pointsFor: Int
     pointsAgainst: Int
+    gamesHomeTeam: [Game]
+    gamesAwayTeam: [Game]
+    leagues: [League]
     createdAt: String
     createdBy: User
+    momdifiedAt: String
   }
 
   enum Division {
@@ -94,7 +98,7 @@ export const teamResolvers = {
       const {captainId, name} = input;
       const data: Prisma.TeamCreateInput = {
         name,
-        captainId,
+        captain: {connect: {id: captainId}},
         roster: {connect: {id: captainId}},
         feeStatus: 'UNPAID',
         division: 'D2',

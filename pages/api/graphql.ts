@@ -2,6 +2,7 @@ import {createSchema, createYoga} from 'graphql-yoga';
 import type {NextApiRequest, NextApiResponse} from 'next';
 import {userTypeDefs, userResolvers} from '@/graphql/queries/users';
 import {teamTypeDefs, teamResolvers} from '@/graphql/queries/teams';
+import {leagueTypeDefs, leagueResolvers} from '@/graphql/queries/leagues';
 import {createContext} from '@/graphql/context';
 import merge from 'lodash.merge';
 import {mergeTypeDefs} from '@graphql-tools/merge';
@@ -11,8 +12,8 @@ export default createYoga<{
   res: NextApiResponse;
 }>({
   schema: createSchema({
-    typeDefs: [teamTypeDefs, userTypeDefs],
-    resolvers: merge(userResolvers, teamResolvers),
+    typeDefs: mergeTypeDefs([userTypeDefs, teamTypeDefs, leagueTypeDefs]),
+    resolvers: merge(userResolvers, teamResolvers, leagueResolvers),
   }),
   context: createContext,
   graphqlEndpoint: '/api/graphql',

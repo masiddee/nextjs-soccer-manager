@@ -10,9 +10,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model League {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  description          String?
+  season               String
+  startDate            String
+  endDate              String
+  teams                Team[]
+  teamsMax             Int      @default(24)
+  games                Game[]
+  location             String?
+  leagueType           LeagueType[]
+  status               LeagueStatus?
+  signupDeadline       DateTime?
+  createdAt            DateTime @default(now())
+  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
+  createdById          Int
+  modifiedAt           DateTime @default(now())
+}
+
+model Game {
+  id                   Int      @id @default(autoincrement())
+  homeTeam             Team     @relation(name: "HomeTeam", fields: [homeTeamId], references: [id])
+  homeTeamId           Int
+  awayTeam             Team     @relation(name: "AwayTeam", fields: [awayTeamId], references: [id])
+  awayTeamId           Int
+  homeTeamScore        Int      @default(0)
+  awayTeamScore        Int      @default(0)
+  field                FieldNumbers?
+  league               League  @relation(fields: [leagueId], references: [id])
+  leagueId             Int
+  gameDateTime         DateTime?
+  gameResult           GameResult?
+  isForfeit            Boolean?
+  createdAt            DateTime @default(now())
+  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
+  createdById          Int
+  modifiedAt           DateTime @default(now())
+}
+
+enum GameResult {
+  HOME_WIN
+  AWAY_WIN
+  TIE
+}
+
+enum FieldNumbers {
+  FIELD_1
+  FIELD_2
+  FIELD_3
+}
+
+enum LeagueType {
+  OPEN
+  COED
+  OVER_30
+  OVER_40
+  WOMEN_AND_NON_BINARY
+}
+
+enum LeagueStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model Team {
   id                   Int      @id @default(autoincrement())
   name                 String
+  captain              User     @relation(name: "Captain", fields: [captainId], references: [id])
   captainId            Int
   roster               User[]
   rosterMax            Int      @default(16)
@@ -24,9 +90,14 @@ model Team {
   draws                Int      @default(0)
   pointsFor            Int      @default(0)
   pointsAgainst        Int      @default(0)
+  gamesHomeTeam        Game[]   @relation("HomeTeam")
+  gamesAwayTeam        Game[]   @relation("AwayTeam")
+  league               League?   @relation(fields: [leagueId], references: [id])
+  leagueId             Int?
   createdAt            DateTime @default(now())
   createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
   createdById          Int
+  modifiedAt           DateTime @default(now())
 }
 
 enum Division {
@@ -48,10 +119,10 @@ model User {
   lastName             String?
   email                String   @unique
   phone                String?
-  gender               String?
-  preferredPosition    String?
-  skillLevel           String?
-  status               String?
+  gender               UserGender?
+  preferredPosition    PreferredPosition?
+  skillLevel           UserSkill?
+  status               UserStatus?
   address1             String?
   address2             String?
   city                 String?
@@ -59,30 +130,41 @@ model User {
   zip                  Int?
   birthDate            String?
   captainInterest      Boolean?
+  userType             UserType?
   teams                Team[]
+  captainTeams         Team[]    @relation("Captain")
   createdTeams         Team[]    @relation("CreatedBy")
+  createdGames         Game[]    @relation("CreatedBy")
+  createdLeagues       League[]  @relation("CreatedBy")
+  createdAt            DateTime  @default(now())
+  modifiedAt           DateTime  @default(now())
 }
 
-enum UserSkillOptions {
+enum UserType {
+  PLAYER
+  CAPTAIN
+  ADMIN
+}
+
+enum UserSkill {
   BEGINNER
   INTERMEDIATE
   ADVANCED
 }
 
-enum UserAccountStatus {
+enum UserStatus {
   INVITED
   JOINED
-  DECLINED
-  CAPTAIN
+  INACTIVE
 }
 
-enum UserGenderOptions {
+enum UserGender {
   MALE
   FEMALE
   OTHER
 }
 
-enum PreferredPositionOptions {
+enum PreferredPosition {
   GOALIE
   DEFENDER
   MIDFIELDER

@@ -1,39 +1,48 @@
 'use strict';
 
-const leagueTypeDefs = `#graphql
+export const leagueTypeDefs = `#graphql
   type Query {
-    getLeagueDetails(leagueId: ID!): LeagueDetails
+    getLeague(leagueId: Int!): League
   }
 
-  type LeagueDetails {
-    id: ID!
+  type League {
+    id: Int!
     name: String!
-    description: String!
+    description: String
     startDate: String!
     endDate: String!
-    teams: [TeamDetails]
+    teams: [Team]
     teamsMax: Int!
-    games: [GameDetails]
+    games: [Game]
     location: String
-    attributes: LeagueAttributes
-    createdAt: Int
-    createdBy: String
-    modifiedAt: Int
-    modifiedBy: String
-  }
-
-  type LeagueAttributes {
     leagueType: [LeagueType]
+    status: LeagueStatus
+    signupDeadline: String
+    createdAt: String!
+    createdBy: User
+    modifiedAt: String
   }
 
-  type GameDetails {
-    gameDateTimes: String
-    homeTeam: teamId!
-    awayTeam: teamId!
+  type Game {
+    id: Int!
+    homeTeam: Team!
+    awayTeam: Team!
     homeTeamScore: Int
     awayTeamScore: Int
     field: FieldNumbers
-    isForfeited: Boolean!
+    league: League
+    gameDateTime: String
+    gameResult: GameResult
+    isForfeit: Boolean
+    createdAt: String!
+    createdBy: User
+    modifiedAt: String
+  }
+
+  enum GameResult {
+    HOME_WIN
+    AWAY_WIN
+    TIE
   }
 
   enum FieldNumbers {
@@ -49,12 +58,22 @@ const leagueTypeDefs = `#graphql
     OVER_40
     WOMEN_AND_NON_BINARY
   }
-`
 
-const leagueResolvers = {
-  Query: {
-    
+  enum LeagueStatus {
+    ACTIVE
+    INACTIVE
   }
-}
+`;
 
-export default {typeDefs: leagueTypeDefs, resolvers: leagueResolvers}
+export const leagueResolvers = {
+  Query: {
+    getLeague: async (parent: any, {leagueId}: any, context: any) => {
+      // Check user has SUPER_ADMIN access (need to setup this auth level)
+      const isSuperUser = false;
+
+      if (!isSuperUser) {
+        throw new Error('Insufficient access.');
+      }
+    },
+  },
+};
