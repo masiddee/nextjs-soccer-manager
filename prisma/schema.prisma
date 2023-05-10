@@ -115,6 +115,7 @@ enum TeamFeeStatus {
 
 model User {
   id                   Int      @id @default(autoincrement())
+  externalUserId       String?   @unique
   firstName            String?
   lastName             String?
   email                String   @unique
