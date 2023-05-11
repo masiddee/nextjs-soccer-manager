@@ -1,4 +1,6 @@
 'use strict';
+import {User} from '@prisma/client';
+import prisma from '../../lib/prisma';
 
 export const leagueTypeDefs = `#graphql
   type Query {
@@ -68,12 +70,17 @@ export const leagueTypeDefs = `#graphql
 export const leagueResolvers = {
   Query: {
     getLeague: async (parent: any, {leagueId}: any, context: any) => {
-      // Check user has SUPER_ADMIN access (need to setup this auth level)
-      const isSuperUser = false;
+      const user: User | null = (await context).user;
 
-      if (!isSuperUser) {
-        throw new Error('Insufficient access.');
+      if (!user) {
+        throw new Error('You need to be logged in to update this user');
       }
+
+      // if (user?.userType !== 'ADMIN') {
+      //   throw new Error(
+      //     'Insufficient access. Need to be an Admin to edit leagues',
+      //   );
+      // }
     },
   },
 };

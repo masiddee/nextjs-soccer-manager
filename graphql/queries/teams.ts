@@ -1,5 +1,5 @@
 'use strict';
-import {Prisma} from '@prisma/client';
+import {Prisma, User} from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export const teamTypeDefs = `#graphql
@@ -51,7 +51,7 @@ export const teamTypeDefs = `#graphql
     leagues: [League]
     createdAt: String
     createdBy: User
-    momdifiedAt: String
+    modifiedAt: String
   }
 
   enum Division {
@@ -89,7 +89,7 @@ export const teamResolvers = {
   },
   Mutation: {
     createTeam: async (parent: any, {input}: any, context: any) => {
-      const user = (await context).user;
+      const user: User | null = (await context).user;
 
       if (!user) {
         throw new Error('You need to be logged in to create a team');
@@ -110,7 +110,7 @@ export const teamResolvers = {
       });
     },
     addTeamMember: async (parent: any, {input}: any, context: any) => {
-      const user = (await context).user;
+      const user: User | null = (await context).user;
 
       if (!user) {
         throw new Error('You need to be logged in to add a team member');

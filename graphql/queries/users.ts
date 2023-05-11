@@ -1,4 +1,5 @@
 'use strict';
+import {User} from '@prisma/client';
 import prisma from '../../lib/prisma';
 import {baseUser} from '../utils/helpers';
 
@@ -17,7 +18,7 @@ export const userTypeDefs = `#graphql
     # email: String
     firstName: String
     lastName: String
-    gender: UserGenderOptions
+    gender: UserGender
     status: UserAccountStatus
     phone: String
     address1: String
@@ -26,11 +27,11 @@ export const userTypeDefs = `#graphql
     state: String
     zip: Int
     birthDate: String
-    skillLevel: UserSkillOptions
+    skillLevel: UserSkill
     captainInterest: Boolean
   }
 
-  enum UserSkillOptions {
+  enum UserSkill {
     BEGINNER
     INTERMEDIATE
     ADVANCED
@@ -43,13 +44,13 @@ export const userTypeDefs = `#graphql
     CAPTAIN
   }
 
-  enum UserGenderOptions {
+  enum UserGender {
     MALE
     FEMALE
     OTHER
   }
 
-  enum PreferredPositionOptions {
+  enum PreferredPosition {
     GOALIE
     DEFENDER
     MIDFIELDER
@@ -59,7 +60,11 @@ export const userTypeDefs = `#graphql
 
   type User {
     id: Int!
-    ${baseUser}
+    firstName: String
+    lastName: String
+    gender: UserGender
+    status: UserAccountStatus
+    externalUserId: String!
     email: String!
     phone: String
     address1: String
@@ -68,11 +73,14 @@ export const userTypeDefs = `#graphql
     state: String
     zip: Int
     birthDate: String
-    preferredPosition: String
-    skillLevel: UserSkillOptions
+    preferredPosition: PreferredPosition
+    skillLevel: UserSkill
     captainInterest: Boolean
+    # loginsCount: Int
+    # lastLogin: String
+    # createdBy: User
     createdAt: String
-    createdBy: User
+    modifiedAt: String
   }
 `;
 
@@ -94,7 +102,7 @@ export const userResolvers = {
       context: any,
       info: any,
     ) => {
-      const user = (await context).user;
+      const user: User | null = (await context).user;
 
       if (!user) {
         throw new Error('You need to be logged in to update this user');

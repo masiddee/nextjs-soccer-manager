@@ -3,6 +3,6 @@
 export const baseUser = `
   firstName: String
   lastName: String
-  gender: String
-  status: String
+  gender: UserGender
+  status: UserAccountStatus
 `;

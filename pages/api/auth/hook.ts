@@ -6,7 +6,7 @@ import {UserData} from 'auth0';
 type RequestBodyAuth0User = UserData & {secret: string};
 
 const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {email, secret, given_name, family_name} =
+  const {email, secret, given_name, family_name, user_id} =
     req.body as RequestBodyAuth0User;
 
   if (req.method !== 'POST') {
@@ -21,6 +21,7 @@ const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     await prisma.user.create({
       data: {
         email,
+        externalUserId: user_id,
         firstName: given_name,
         lastName: family_name,
       } as Prisma.UserCreateInput,

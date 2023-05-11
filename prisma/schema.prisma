@@ -15,8 +15,8 @@ model League {
   name                 String
   description          String?
   season               String
-  startDate            String
-  endDate              String
+  startDate            DateTime
+  endDate              DateTime
   teams                Team[]
   teamsMax             Int      @default(24)
   games                Game[]
@@ -114,11 +114,11 @@ enum TeamFeeStatus {
 }
 
 model User {
-  id                   Int      @id @default(autoincrement())
-  externalUserId       String?   @unique
+  id                   Int                @id @default(autoincrement())
+  externalUserId       String             @unique
   firstName            String?
   lastName             String?
-  email                String   @unique
+  email                String             @unique
   phone                String?
   gender               UserGender?
   preferredPosition    PreferredPosition?
@@ -133,12 +133,12 @@ model User {
   captainInterest      Boolean?
   userType             UserType?
   teams                Team[]
-  captainTeams         Team[]    @relation("Captain")
-  createdTeams         Team[]    @relation("CreatedBy")
-  createdGames         Game[]    @relation("CreatedBy")
-  createdLeagues       League[]  @relation("CreatedBy")
-  createdAt            DateTime  @default(now())
-  modifiedAt           DateTime  @default(now())
+  captainTeams         Team[]             @relation("Captain")
+  createdTeams         Team[]             @relation("CreatedBy")
+  createdGames         Game[]             @relation("CreatedBy")
+  createdLeagues       League[]           @relation("CreatedBy")
+  createdAt            DateTime           @default(now())
+  modifiedAt           DateTime           @default(now())
 }
 
 enum UserType {
