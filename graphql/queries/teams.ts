@@ -81,19 +81,29 @@ export const teamTypeDefs = `#graphql
 
 export const teamResolvers = {
   Query: {
-    getTeam: (parent: any, {teamId}: any, context: any, info: any) =>
-      prisma.team.findFirst({
+    getTeam: (parent: any, {teamId}: any, context: any, info: any) => {
+      return prisma.team.findFirst({
         where: {id: teamId},
-      }),
-    getAllTeams: () => prisma.team.findMany(),
+      });
+    },
+    getAllTeams: async () => {
+      const teams: any = await prisma.team.findMany();
+
+      console.log({teams});
+
+      return teams;
+    },
   },
   Mutation: {
     createTeam: async (parent: any, {input}: any, context: any) => {
+      console.log('CREATING TEAM...');
       const user: User | null = (await context).user;
 
       if (!user) {
         throw new Error('You need to be logged in to create a team');
       }
+
+      console.log('FOUND USER...', {user});
 
       const {captainId, name} = input;
       const data: Prisma.TeamCreateInput = {
@@ -104,6 +114,8 @@ export const teamResolvers = {
         division: 'D2',
         createdBy: {connect: {id: captainId}},
       };
+
+      console.log('TEAM DATA ---', {data});
 
       return prisma.team.create({
         data,
