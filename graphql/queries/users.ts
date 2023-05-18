@@ -86,11 +86,14 @@ export const userTypeDefs = `#graphql
 
 export const userResolvers = {
   Query: {
-    getUser: async (parent: any, {userId}: any, context: any, info: any) =>
-      prisma.user.findFirst({
+    getUser: async (parent: any, {userId}: any, context: any, info: any) => {
+      console.log('FIND USER!---- ');
+
+      return prisma.user.findFirst({
         where: {id: userId},
-      }),
-    getAllUsers: () => prisma.user.findMany(),
+      });
+    },
+    getAllUsers: async () => prisma.user.findMany(),
   },
   Mutation: {
     signUp: async () => {

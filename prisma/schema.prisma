@@ -1,53 +1,105 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL")
+  directUrl         = env("POSTGRES_URL_NON_POOLING")
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model League {
-  id                   Int      @id @default(autoincrement())
-  name                 String
-  description          String?
-  season               String
-  startDate            DateTime
-  endDate              DateTime
-  teams                Team[]
-  teamsMax             Int      @default(24)
-  games                Game[]
-  location             String?
-  leagueType           LeagueType[]
-  status               LeagueStatus?
-  signupDeadline       DateTime?
-  createdAt            DateTime @default(now())
-  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
-  createdById          Int
-  modifiedAt           DateTime @default(now())
+  id             Int           @id @default(autoincrement())
+  name           String
+  description    String?
+  season         String
+  startDate      DateTime
+  endDate        DateTime
+  teamsMax       Int           @default(24)
+  location       String?
+  leagueType     LeagueType[]
+  status         LeagueStatus?
+  signupDeadline DateTime?
+  createdAt      DateTime      @default(now())
+  createdById    Int
+  modifiedAt     DateTime      @default(now())
+  games          Game[]
+  createdBy      User          @relation("CreatedBy", fields: [createdById], references: [id])
+  teams          Team[]
 }
 
 model Game {
-  id                   Int      @id @default(autoincrement())
-  homeTeam             Team     @relation(name: "HomeTeam", fields: [homeTeamId], references: [id])
-  homeTeamId           Int
-  awayTeam             Team     @relation(name: "AwayTeam", fields: [awayTeamId], references: [id])
-  awayTeamId           Int
-  homeTeamScore        Int      @default(0)
-  awayTeamScore        Int      @default(0)
-  field                FieldNumbers?
-  league               League  @relation(fields: [leagueId], references: [id])
-  leagueId             Int
-  gameDateTime         DateTime?
-  gameResult           GameResult?
-  isForfeit            Boolean?
-  createdAt            DateTime @default(now())
-  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
-  createdById          Int
-  modifiedAt           DateTime @default(now())
+  id            Int           @id @default(autoincrement())
+  homeTeamId    Int
+  awayTeamId    Int
+  homeTeamScore Int           @default(0)
+  awayTeamScore Int           @default(0)
+  field         FieldNumbers?
+  leagueId      Int
+  gameDateTime  DateTime?
+  gameResult    GameResult?
+  isForfeit     Boolean?
+  createdAt     DateTime      @default(now())
+  createdById   Int
+  modifiedAt    DateTime      @default(now())
+  awayTeam      Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  createdBy     User          @relation("CreatedBy", fields: [createdById], references: [id])
+  homeTeam      Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  league        League        @relation(fields: [leagueId], references: [id])
+}
+
+model Team {
+  id            Int           @id @default(autoincrement())
+  name          String
+  captainId     Int
+  rosterMax     Int           @default(16)
+  rosterMin     Int           @default(0)
+  feeStatus     TeamFeeStatus
+  division      Division
+  wins          Int           @default(0)
+  losses        Int           @default(0)
+  draws         Int           @default(0)
+  pointsFor     Int           @default(0)
+  pointsAgainst Int           @default(0)
+  leagueId      Int?
+  createdAt     DateTime      @default(now())
+  createdById   Int
+  modifiedAt    DateTime      @default(now())
+  gamesAwayTeam Game[]        @relation("AwayTeam")
+  gamesHomeTeam Game[]        @relation("HomeTeam")
+  captain       User          @relation("Captain", fields: [captainId], references: [id])
+  createdBy     User          @relation("CreatedBy", fields: [createdById], references: [id])
+  league        League?       @relation(fields: [leagueId], references: [id])
+  roster        User[]        @relation("TeamToUser")
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  externalUserId    String             @unique
+  firstName         String?
+  lastName          String?
+  email             String             @unique
+  phone             String?
+  gender            UserGender?
+  preferredPosition PreferredPosition?
+  skillLevel        UserSkill?
+  status            UserStatus?
+  address1          String?
+  address2          String?
+  city              String?
+  state             String?
+  zip               Int?
+  birthDate         String?
+  captainInterest   Boolean?
+  userType          UserType?
+  createdAt         DateTime           @default(now())
+  modifiedAt        DateTime           @default(now())
+  createdGames      Game[]             @relation("CreatedBy")
+  createdLeagues    League[]           @relation("CreatedBy")
+  captainTeams      Team[]             @relation("Captain")
+  createdTeams      Team[]             @relation("CreatedBy")
+  teams             Team[]             @relation("TeamToUser")
 }
 
 enum GameResult {
@@ -75,31 +127,6 @@ enum LeagueStatus {
   INACTIVE
 }
 
-model Team {
-  id                   Int      @id @default(autoincrement())
-  name                 String
-  captain              User     @relation(name: "Captain", fields: [captainId], references: [id])
-  captainId            Int
-  roster               User[]
-  rosterMax            Int      @default(16)
-  rosterMin            Int      @default(0)
-  feeStatus            TeamFeeStatus
-  division             Division
-  wins                 Int      @default(0)
-  losses               Int      @default(0)
-  draws                Int      @default(0)
-  pointsFor            Int      @default(0)
-  pointsAgainst        Int      @default(0)
-  gamesHomeTeam        Game[]   @relation("HomeTeam")
-  gamesAwayTeam        Game[]   @relation("AwayTeam")
-  league               League?   @relation(fields: [leagueId], references: [id])
-  leagueId             Int?
-  createdAt            DateTime @default(now())
-  createdBy            User     @relation(name: "CreatedBy", fields: [createdById], references: [id])
-  createdById          Int
-  modifiedAt           DateTime @default(now())
-}
-
 enum Division {
   D1
   D2
@@ -111,34 +138,6 @@ enum TeamFeeStatus {
   PAID
   PARTIAL
   REFUNDED
-}
-
-model User {
-  id                   Int                @id @default(autoincrement())
-  externalUserId       String             @unique
-  firstName            String?
-  lastName             String?
-  email                String             @unique
-  phone                String?
-  gender               UserGender?
-  preferredPosition    PreferredPosition?
-  skillLevel           UserSkill?
-  status               UserStatus?
-  address1             String?
-  address2             String?
-  city                 String?
-  state                String?
-  zip                  Int?
-  birthDate            String?
-  captainInterest      Boolean?
-  userType             UserType?
-  teams                Team[]
-  captainTeams         Team[]             @relation("Captain")
-  createdTeams         Team[]             @relation("CreatedBy")
-  createdGames         Game[]             @relation("CreatedBy")
-  createdLeagues       League[]           @relation("CreatedBy")
-  createdAt            DateTime           @default(now())
-  modifiedAt           DateTime           @default(now())
 }
 
 enum UserType {

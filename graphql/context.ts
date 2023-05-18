@@ -13,11 +13,14 @@ export async function createContext({
 
   if (!session || typeof session === 'undefined') return {};
 
+  console.log('SESSION', {session});
+
   const {user, accessToken} = session;
   const prismaUser = await prisma.user.findFirst({
-    where: {externalUserId: user.id},
+    where: {externalUserId: user.sub},
   });
 
+  console.log('USER', {prismaUser});
   return {
     user: prismaUser,
     accessToken,
