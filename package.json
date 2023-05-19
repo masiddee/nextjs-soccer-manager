@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "ts:check": "tsc --noEmit",
-    "prisma:seed": "npx prisma db seed"
+    "prisma:seed": "npx prisma db seed",
+    "prisma:studio": "npx prisma studio",
+    "prisma:studio:local": "dotenv -e .env.local -- npx prisma studio"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
