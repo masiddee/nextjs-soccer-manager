@@ -1,15 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
 import {useUser} from '@auth0/nextjs-auth0/client';
-import styles from './Header.module.css';
+import {Grid, useTheme} from '@nextui-org/react';
 
 const Header = () => {
   const {user} = useUser();
+  const {theme} = useTheme();
 
   return (
-    <header>
-      <div className={styles.container}>
+    <Grid.Container
+      justify="space-between"
+      alignItems="center"
+      css={{height: theme?.space['3xl']}}>
+      <Grid>
         <Link href="/">Home</Link>
+      </Grid>
+      <Grid>
         <nav>
           {user ? (
             <div>
@@ -21,8 +27,8 @@ const Header = () => {
             </div>
           )}
         </nav>
-      </div>
-    </header>
+      </Grid>
+    </Grid.Container>
   );
 };
 

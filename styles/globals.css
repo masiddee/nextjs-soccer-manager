@@ -17,3 +17,26 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
 }
+
+/** TODO:  NEED TO PORT THESE STYLES TO NEXTUI!! **/
+/** TABS **/
+.react-tabs__tab-list {
+  border-bottom: 1px solid lightgray;
+  margin: 0;
+  margin-bottom: 1.2rem;
+  display: flex;
+}
+
+.react-tabs__tab--selected {
+  background-color: gray;
+}
+
+.react-tabs__tab {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 0;
+  padding: 0.2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  cursor: pointer;
+}

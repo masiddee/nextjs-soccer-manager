@@ -1,3 +1,4 @@
+import {Container} from '@nextui-org/react';
 import React from 'react';
 import Header from './Header/Header';
 
@@ -7,10 +8,10 @@ interface Props {
 
 const Layout: React.FC<Props> = ({children}) => {
   return (
-    <div>
+    <Container lg>
       <Header />
       {children}
-    </div>
+    </Container>
   );
 };
 
