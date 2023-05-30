@@ -3,6 +3,7 @@ import Head from 'next/head';
 import {Inter} from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 import {useUser} from '@auth0/nextjs-auth0/client';
+import {Button} from '@nextui-org/react';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -20,7 +21,10 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           {user ? (
-            <p>Welcome, {user.nickname ?? 'Default User'}!</p>
+            <>
+              <p>Welcome, {user.nickname ?? 'Default User'}!</p>
+              <Button>Click me</Button>
+            </>
           ) : (
             <p>Please login via the link above.</p>
           )}
