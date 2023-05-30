@@ -1,14 +1,16 @@
 import Head from 'next/head';
 // import Image from 'next/image';
 import {Inter} from 'next/font/google';
-import styles from '@/styles/Home.module.css';
+// import styles from '@/styles/Home.module.css';
 import {useUser} from '@auth0/nextjs-auth0/client';
-import {Button} from '@nextui-org/react';
+import {Button, Grid, Text} from '@nextui-org/react';
+import {useRouter} from 'next/router';
 
 const inter = Inter({subsets: ['latin']});
 
 export default function Home() {
   const {user} = useUser();
+  const router = useRouter();
 
   return (
     <>
@@ -18,18 +20,23 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
+      <Grid.Container>
+        <Grid>
           {user ? (
             <>
-              <p>Welcome, {user.nickname ?? 'Default User'}!</p>
+              <Text>Welcome, {user.nickname ?? 'Default User'}!</Text>
               <Button>Click me</Button>
             </>
           ) : (
-            <p>Please login via the link above.</p>
+            <Text>Please login via the link above.</Text>
           )}
-        </div>
-      </main>
+          <br />
+          <Text>Check out our open Leagues!</Text>
+          <Button onClick={() => router.push('/league/1')}>
+            View our Leagues
+          </Button>
+        </Grid>
+      </Grid.Container>
     </>
   );
 }
