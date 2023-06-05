@@ -1,0 +1,78 @@
+type Query {
+  getUser(userId: Int!): User!
+  getAllUsers: [User]!
+}
+
+type Mutation {
+  signUp(email: String!): ID!
+  updateUser(userId: Int!, userInput: UserInput): User!
+}
+
+input UserInput {
+  # email: String
+  firstName: String
+  lastName: String
+  gender: UserGender
+  status: UserAccountStatus
+  phone: String
+  address1: String
+  address2: String
+  city: String
+  state: String
+  zip: Int
+  birthDate: String
+  skillLevel: UserSkill
+  captainInterest: Boolean
+}
+
+enum UserSkill {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum UserAccountStatus {
+  INVITED
+  JOINED
+  DECLINED
+  CAPTAIN
+}
+
+enum UserGender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum PreferredPosition {
+  GOALIE
+  DEFENDER
+  MIDFIELDER
+  STRIKER
+  WINGER
+}
+
+type User {
+  id: Int!
+  firstName: String
+  lastName: String
+  gender: UserGender
+  status: UserAccountStatus
+  externalUserId: String!
+  email: String!
+  phone: String
+  address1: String
+  address2: String
+  city: String
+  state: String
+  zip: Int
+  birthDate: String
+  preferredPosition: PreferredPosition
+  skillLevel: UserSkill
+  captainInterest: Boolean
+  # loginsCount: Int
+  # lastLogin: String
+  # createdBy: User
+  createdAt: String
+  modifiedAt: String
+}
