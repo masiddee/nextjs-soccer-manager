@@ -10,7 +10,8 @@
     "ts:check": "tsc --noEmit",
     "prisma:seed": "npx prisma db seed",
     "prisma:studio": "npx prisma studio",
-    "prisma:studio:local": "dotenv -e .env.local -- npx prisma studio"
+    "prisma:studio:local": "dotenv -e .env.local -- npx prisma studio",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
@@ -31,6 +32,11 @@
     "react-tabs": "^6.0.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/client-preset": "4.0.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
     "@types/auth0": "^3.3.2",
     "@types/lodash.merge": "^4.6.7",
     "@types/node": "^18.15.11",
