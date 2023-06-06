@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "ts:check": "tsc --noEmit",
+    "prisma:generate": "npx prisma generate && yarn codegen",
     "prisma:seed": "npx prisma db seed",
     "prisma:studio": "npx prisma studio",
     "prisma:studio:local": "dotenv -e .env.local -- npx prisma studio",
