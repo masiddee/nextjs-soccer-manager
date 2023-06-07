@@ -122,7 +122,7 @@ const LeagueDetailPage = () => {
             <Text>Description: {league.description}</Text>
           </TabPanel>
           <TabPanel>
-            <Text>TBD</Text>
+            <LeagueScheduleTable />
           </TabPanel>
           <TabPanel>
             <Text>TBD</Text>
