@@ -5,6 +5,7 @@ import {useRouter} from 'next/router';
 import React from 'react';
 import {format} from 'date-fns';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
+import {LeagueScheduleTable} from '@/components/LeagueScheduleTable';
 
 const GetLeagueDetailsQuery = gql`
   query getLeagueDetailsQuery($leagueId: Int!) {
@@ -25,6 +26,7 @@ const GetLeagueDetailsQuery = gql`
       leagueType
       status
       signupDeadline
+      modifiedAt
     }
   }
 `;
