@@ -16,11 +16,22 @@ const GetLeagueDetailsQuery = gql`
       startDate
       endDate
       teams {
-        id
+        name
       }
       teamsMax
       games {
         id
+        homeTeam {
+          name
+        }
+        awayTeam {
+          name
+        }
+        homeTeamScore
+        awayTeamScore
+        field
+        gameDateTime
+        gameResult
       }
       location
       leagueType
