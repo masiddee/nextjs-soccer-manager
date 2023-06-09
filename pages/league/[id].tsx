@@ -1,11 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
 import {Button, Grid, Loading, Text, useTheme} from '@nextui-org/react';
-import {League} from '@prisma/client';
 import {useRouter} from 'next/router';
 import React from 'react';
 import {format} from 'date-fns';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import {LeagueScheduleTable} from '@/components/LeagueScheduleTable';
+import {Game, League} from '@/graphql/generated-types';
 
 const GetLeagueDetailsQuery = gql`
   query getLeagueDetailsQuery($leagueId: Int!) {
@@ -32,6 +32,7 @@ const GetLeagueDetailsQuery = gql`
         field
         gameDateTime
         gameResult
+        isForfeit
       }
       location
       leagueType
@@ -42,13 +43,62 @@ const GetLeagueDetailsQuery = gql`
   }
 `;
 
+type GetLeagueDetailsQueryTypes = {
+  getLeague: League;
+};
+
+export type LeagueGames = Omit<
+  Game,
+  'createdAt' | 'createdBy' | 'modifiedAt' | 'league' | '__typename'
+>;
+
+function isGames(unknown: unknown[]): unknown is Game[] {
+  return (unknown as Game[]).some(game => game.__typename === 'Game');
+}
+
+const transformGames = (
+  games: unknown[] | undefined | null,
+): LeagueGames[] | undefined => {
+  if (!games || !isGames(games) || !Boolean(games.length)) return;
+
+  return (games as Game[]).map(game => {
+    const {
+      id,
+      homeTeam,
+      awayTeam,
+      homeTeamScore,
+      awayTeamScore,
+      field,
+      gameDateTime,
+      gameResult,
+      isForfeit,
+    } = game;
+
+    return {
+      id,
+      homeTeam,
+      awayTeam,
+      homeTeamScore,
+      awayTeamScore,
+      field,
+      gameDateTime,
+      gameResult,
+      isForfeit,
+    };
+  });
+};
+
 const LeagueDetailPage = () => {
   const {query} = useRouter();
   const leagueId = Number(query.id);
-  const {data, error, loading} = useQuery(GetLeagueDetailsQuery, {
-    variables: {leagueId},
-  });
+  const {data, error, loading} = useQuery<GetLeagueDetailsQueryTypes>(
+    GetLeagueDetailsQuery,
+    {
+      variables: {leagueId},
+    },
+  );
   const {theme} = useTheme();
+  const games = data?.getLeague.games;
 
   if (loading)
     return (
@@ -70,7 +120,7 @@ const LeagueDetailPage = () => {
       </Grid.Container>
     );
 
-  const league: League | undefined = data.getLeague;
+  const league: League | undefined = data?.getLeague;
 
   if (!league) {
     return (
@@ -133,7 +183,7 @@ const LeagueDetailPage = () => {
             <Text>Description: {league.description}</Text>
           </TabPanel>
           <TabPanel>
-            <LeagueScheduleTable />
+            <LeagueScheduleTable leagueGames={transformGames(games)} />
           </TabPanel>
           <TabPanel>
             <Text>TBD</Text>

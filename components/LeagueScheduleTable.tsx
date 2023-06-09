@@ -1,236 +1,30 @@
+import {LeagueGames} from '@/pages/league/[id]';
 import {CheckIcon} from '@/public/icons';
 import {getFormattedDateTime} from '@/utils/helpers';
 import {Card, Table, Text} from '@nextui-org/react';
-import {FieldNumbers, Game} from '@prisma/client';
+import {FieldNumbers} from '@prisma/client';
 import React from 'react';
 
-type LeagueGames = {
-  homeTeam: string;
-  awayTeam: string;
-} & Omit<
-  Game,
-  | 'createdAt'
-  | 'createdById'
-  | 'modifiedAt'
-  | 'leagueId'
-  | 'homeTeamId'
-  | 'awayTeamId'
->;
+type LeagueScheduleTableProps = {
+  leagueGames: LeagueGames[] | undefined;
+};
 
 type TransformedLeagueGames = {
   gameDate: string;
   gameTime: string;
-  gameDateTime: Date;
+  gameDateTime: Date | string;
   games: Record<FieldNumbers, LeagueGames>;
 };
 
-export const LeagueScheduleTable = () => {
+export const LeagueScheduleTable = ({
+  leagueGames,
+}: LeagueScheduleTableProps) => {
   const [pageNumber, setPageNumber] = React.useState(1);
   const columns: {name: string; uid: FieldNumbers | 'gameTime'}[] = [
     {name: '', uid: 'gameTime'},
     {name: 'Pitch 1', uid: 'FIELD_1'},
     {name: 'Pitch 2', uid: 'FIELD_2'},
     {name: 'Pitch 3', uid: 'FIELD_3'},
-  ];
-  const games: LeagueGames[] = [
-    {
-      id: 1,
-      homeTeam: 'Atl United',
-      awayTeam: 'FC Cincinnati',
-      homeTeamScore: 4,
-      awayTeamScore: 0,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1685296800000), // May 28, 2023, 2pm ET
-      gameResult: 'HOME_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 2,
-      homeTeam: 'Tottenham',
-      awayTeam: 'Paris Saint German',
-      homeTeamScore: 0,
-      awayTeamScore: 1,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1685296800000), // May 28, 2023, 2pm ET
-      gameResult: 'AWAY_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 3,
-      homeTeam: 'Wrexham United',
-      awayTeam: 'Liverpool',
-      homeTeamScore: 2,
-      awayTeamScore: 1,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1685296800000), // May 28, 2023, 2pm ET
-      gameResult: 'HOME_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 4,
-      homeTeam: 'Napoli',
-      awayTeam: 'Ajax',
-      homeTeamScore: 1,
-      awayTeamScore: 1,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1685300400000), // May 28, 2023, 3pm ET
-      gameResult: 'TIE',
-      isForfeit: null,
-    },
-    {
-      id: 5,
-      homeTeam: 'Porto',
-      awayTeam: 'Rangers',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1685300400000), // May 28, 2023, 3pm ET
-      gameResult: 'TIE',
-      isForfeit: null,
-    },
-    {
-      id: 6,
-      homeTeam: 'Bayern',
-      awayTeam: 'Marseille',
-      homeTeamScore: 2,
-      awayTeamScore: 3,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1685300400000), // May 28, 2023, 3pm ET
-      gameResult: 'AWAY_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 7,
-      homeTeam: 'Arsenal',
-      awayTeam: 'Chelsea',
-      homeTeamScore: 2,
-      awayTeamScore: 5,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1685901600000), // June 4, 2023, 2pm ET
-      gameResult: 'AWAY_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 8,
-      homeTeam: 'Sevilla',
-      awayTeam: 'Real Madrid',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1685901600000), // June 4, 2023, 2pm ET
-      gameResult: 'TIE',
-      isForfeit: null,
-    },
-    {
-      id: 9,
-      homeTeam: 'LA Galaxy',
-      awayTeam: 'DC United',
-      homeTeamScore: 2,
-      awayTeamScore: 0,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1685901600000), // June 4, 2023, 2pm ET
-      gameResult: 'HOME_WIN',
-      isForfeit: null,
-    },
-    {
-      id: 10,
-      homeTeam: 'Crystal Palace',
-      awayTeam: 'Aston Villa',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1685905200000), // June 4, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 11,
-      homeTeam: 'West Ham',
-      awayTeam: 'Everton',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1685905200000), // June 4, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 12,
-      homeTeam: 'Leeds United',
-      awayTeam: 'Newcastle',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1685905200000), // June 4, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 13,
-      homeTeam: 'Barcelona',
-      awayTeam: 'Inter Milan',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1686506400000), // June 11, 2023, 2pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 14,
-      homeTeam: 'Man City',
-      awayTeam: 'Man united',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1686506400000), // June 11, 2023, 2pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 15,
-      homeTeam: 'FC Dallas',
-      awayTeam: 'Seattle Sounders',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1686506400000), // June 11, 2023, 2pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 16,
-      homeTeam: 'Chicago FC',
-      awayTeam: 'Inter Miami',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_1',
-      gameDateTime: new Date(1686510000000), // June 11, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 17,
-      homeTeam: 'Toronto FC',
-      awayTeam: 'New York FC',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_2',
-      gameDateTime: new Date(1686510000000), // June 11, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
-    {
-      id: 18,
-      homeTeam: 'NY Redbulls',
-      awayTeam: 'Nashville',
-      homeTeamScore: 0,
-      awayTeamScore: 0,
-      field: 'FIELD_3',
-      gameDateTime: new Date(1686510000000), // June 11, 2023, 3pm ET
-      gameResult: null,
-      isForfeit: null,
-    },
   ];
 
   const transformLeagueData = (games: LeagueGames[]) => {
@@ -302,7 +96,7 @@ export const LeagueScheduleTable = () => {
               css={{fontFamily: '$mono'}}
               size={'$lg'}
               weight={cellValue.gameResult === 'HOME_WIN' ? 'bold' : 'normal'}>
-              {cellValue.homeTeam} - {cellValue.homeTeamScore}{' '}
+              {cellValue.homeTeam.name} - {cellValue.homeTeamScore}{' '}
               {cellValue.gameResult === 'HOME_WIN' && (
                 <CheckIcon size={30} fill={'green'} />
               )}
@@ -312,7 +106,7 @@ export const LeagueScheduleTable = () => {
               css={{fontFamily: '$mono'}}
               size={'$lg'}
               weight={cellValue.gameResult === 'AWAY_WIN' ? 'bold' : 'normal'}>
-              {cellValue.awayTeam} - {cellValue.awayTeamScore}{' '}
+              {cellValue.awayTeam.name} - {cellValue.awayTeamScore}{' '}
               {cellValue.gameResult === 'AWAY_WIN' && (
                 <CheckIcon size={30} fill={'green'} />
               )}
@@ -329,7 +123,11 @@ export const LeagueScheduleTable = () => {
         {/* Display Game dates as header */}
         {
           Array.from(
-            new Set(transformLeagueData(games).map(({gameDate}) => gameDate)),
+            new Set(
+              transformLeagueData(leagueGames as LeagueGames[]).map(
+                ({gameDate}) => gameDate,
+              ),
+            ),
           )[pageNumber - 1]
         }
       </Text>
@@ -346,7 +144,7 @@ export const LeagueScheduleTable = () => {
             </Table.Column>
           )}
         </Table.Header>
-        <Table.Body items={transformLeagueData(games)}>
+        <Table.Body items={transformLeagueData(leagueGames as LeagueGames[])}>
           {(item: TransformedLeagueGames) => (
             <Table.Row key={item.gameDate + item.gameTime}>
               {columnKey => (
