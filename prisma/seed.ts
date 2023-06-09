@@ -1,4 +1,6 @@
-import {PrismaClient, Prisma} from '@prisma/client';
+import {gameDataFactory} from '@/data/sampleGames';
+import {teamDataFactory} from '@/data/sampleTeams';
+import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -416,7 +418,7 @@ async function main() {
         startDate: new Date(2023, 1, 1, 0, 0, 1),
         endDate: new Date(2023, 2, 24, 23, 59, 59),
         status: 'INACTIVE',
-        createdById: 1,
+        createdById: 72,
       },
       {
         id: 2,
@@ -426,55 +428,13 @@ async function main() {
         startDate: new Date(2023, 2, 25, 0, 0, 1),
         endDate: new Date(2023, 10, 21, 23, 59, 59),
         status: 'ACTIVE',
-        createdById: 1,
+        createdById: 72,
       },
     ],
   });
 
-  // Team
-  await prisma.team.createMany({
-    data: [
-      {
-        id: 1,
-        leagueId: 2,
-        name: 'Atlanta United',
-        captainId: 4,
-        feeStatus: 'PAID',
-        division: 'D1',
-        wins: 6,
-        losses: 4,
-        draws: 5,
-        createdById: 1,
-      },
-      {
-        id: 2,
-        leagueId: 2,
-        name: 'Austin FC',
-        captainId: 27,
-        feeStatus: 'PAID',
-        division: 'D1',
-        wins: 4,
-        losses: 6,
-        draws: 4,
-        createdById: 1,
-      },
-    ],
-  });
-
-  // Game
-  await prisma.game.create({
-    data: {
-      id: 1,
-      leagueId: 2,
-      homeTeamId: 1,
-      awayTeamId: 2,
-      homeTeamScore: 2,
-      awayTeamScore: 1,
-      gameResult: 'HOME_WIN',
-      isForfeit: false,
-      createdById: 1,
-    },
-  });
+  // Create game and team sample data
+  Promise.all([...gameDataFactory(prisma), ...teamDataFactory(prisma)]);
 }
 
 main()

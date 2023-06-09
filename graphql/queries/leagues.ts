@@ -29,4 +29,36 @@ export const leagueResolvers = {
       return leagues;
     },
   },
+  League: {
+    teams: async (parent: any) => {
+      const leagueTeams = await prisma.team.findMany({
+        where: {leagueId: parent.id},
+      });
+
+      return leagueTeams;
+    },
+    games: async (parent: any) => {
+      const leagueGames = await prisma.game.findMany({
+        where: {leagueId: parent.id},
+      });
+
+      return leagueGames;
+    },
+  },
+  Game: {
+    homeTeam: async (parent: any) => {
+      const __homeTeam = await prisma.team.findFirst({
+        where: {id: parent.homeTeamId},
+      });
+
+      return __homeTeam;
+    },
+    awayTeam: async (parent: any) => {
+      const __awayTeam = await prisma.team.findFirst({
+        where: {id: parent.awayTeamId},
+      });
+
+      return __awayTeam;
+    },
+  },
 };
