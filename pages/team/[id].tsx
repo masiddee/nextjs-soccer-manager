@@ -5,6 +5,7 @@ import React from 'react';
 import {format} from 'date-fns';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import {Maybe, Team, User} from '@/graphql/generated-types';
+import Link from 'next/link';
 
 const GetTeamDetailsQuery = gql`
   query getTeamDetailsQuery($teamId: Int!) {
@@ -16,6 +17,7 @@ const GetTeamDetailsQuery = gql`
         lastName
       }
       roster {
+        id
         firstName
         lastName
         preferredPosition
@@ -49,6 +51,7 @@ export default function TeamDetailPage() {
     variables: {teamId},
   });
   const {theme} = useTheme();
+  const router = useRouter();
 
   if (loading)
     return (
@@ -195,7 +198,7 @@ export default function TeamDetailPage() {
                             </Button>
                           </Grid>
                           <Grid>
-                            <Button auto light color="primary">
+                            <Button auto light color="primary" onClick={() => router.push(`/player/${player?.id}`)}>
                               View player
                             </Button>
                           </Grid>
