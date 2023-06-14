@@ -25,7 +25,6 @@ export default function Home() {
           {user ? (
             <>
               <Text>Welcome, {user.nickname ?? 'Default User'}!</Text>
-              <Button>Click me</Button>
             </>
           ) : (
             <Text>Please login via the link above.</Text>
