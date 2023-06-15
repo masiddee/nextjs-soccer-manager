@@ -4,10 +4,16 @@ import prisma from '../../lib/prisma';
 
 export const teamResolvers = {
   Query: {
-    getTeam: (parent: any, {teamId}: any, context: any, info: any) => {
-      return prisma.team.findFirst({
+    getTeam: async (parent: any, {teamId}: any, context: any, info: any) => {
+      return await prisma.team.findFirst({
         where: {id: teamId},
-      });
+        include: {
+          captain: true,
+          roster: true,
+          league: true,
+          createdBy: true,
+        },
+      })
     },
     getAllTeams: async () => {
       const teams: any = await prisma.team.findMany();

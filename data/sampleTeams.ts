@@ -1,173 +1,177 @@
 'use strict';
 
 import {Division, Prisma, PrismaClient, TeamFeeStatus} from '@prisma/client';
+import {
+  sampleAtlantaUnitedPlayers,
+  sampleAustinFcPlayers,
+} from './samplePlayers';
 
 /**
  * NOTE: the foreign key IDs may need to be changed for your local Prisma instance
  */
-const teamData = [
+const teamData: Prisma.TeamUncheckedCreateInput[] = [
   {
-    // id: 1,
+    id: 1,
     leagueId: 1,
     name: 'Atlanta United',
-    captainId: 72,
+    captainId: 1,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 6,
     losses: 4,
     draws: 5,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 2,
+    id: 2,
     leagueId: 1,
     name: 'Austin FC',
-    captainId: 84,
+    captainId: 2,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 3,
+    id: 3,
     leagueId: 1,
     name: 'Dallas FC',
-    captainId: 85,
+    captainId: 3,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 4,
+    id: 4,
     leagueId: 1,
     name: 'Manchester United',
-    captainId: 86,
+    captainId: 4,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 5,
+    id: 5,
     leagueId: 1,
     name: 'Manchester City',
-    captainId: 76,
+    captainId: 5,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 6,
+    id: 6,
     leagueId: 1,
     name: 'Inter Milan',
-    captainId: 77,
+    captainId: 6,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 7,
+    id: 7,
     leagueId: 1,
     name: 'Barcelona',
-    captainId: 78,
+    captainId: 7,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 8,
+    id: 8,
     leagueId: 1,
     name: 'Real Madrid',
-    captainId: 79,
+    captainId: 8,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 9,
+    id: 9,
     leagueId: 1,
     name: 'Inter Miami',
-    captainId: 80,
+    captainId: 9,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 10,
+    id: 10,
     leagueId: 1,
     name: 'Seattle Sounders',
-    captainId: 81,
+    captainId: 10,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 11,
+    id: 11,
     leagueId: 1,
     name: 'Cincinnati FC',
-    captainId: 82,
+    captainId: 11,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
   {
-    // id: 12,
+    id: 12,
     leagueId: 1,
     name: 'New York Redbulls',
-    captainId: 83,
+    captainId: 12,
     feeStatus: 'PAID',
     division: 'D1',
     wins: 4,
     losses: 6,
     draws: 4,
-    createdById: 72,
+    createdById: 1,
   },
 ];
 
 /**
  * NOTE: using prisma.createMany gave me a foreignKey error, so using map + prisma.create instead.
  */
-export const teamDataFactory = (
+export const teamDataFactory = async (
   prisma: PrismaClient<
     Prisma.PrismaClientOptions,
     never,
     Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
   >,
-) =>
-  teamData.map(_ => {
-    return prisma.team.create({
+) => {
+  teamData.forEach(async _ => {
+    const team = await prisma.team.create({
       data: {
         league: {
           connect: {
-            id: _.leagueId,
+            id: Number(_.leagueId),
           },
         },
         name: _.name,
@@ -188,4 +192,42 @@ export const teamDataFactory = (
         },
       },
     });
+
+    // Add relation team <---> players
+    switch (team.name) {
+      case 'Atlanta United':
+        sampleAtlantaUnitedPlayers.forEach(async p => {
+          await prisma.user.update({
+            data: {
+              teams: {
+                connect: {
+                  id: team.id,
+                },
+              },
+            },
+            where: {
+              id: Number(p.externalUserId),
+            },
+          });
+        });
+        break;
+
+      case 'Austin FC':
+        sampleAustinFcPlayers.forEach(async p => {
+          await prisma.user.update({
+            data: {
+              teams: {
+                connect: {
+                  id: team.id,
+                },
+              },
+            },
+            where: {
+              id: Number(p.externalUserId),
+            },
+          });
+        });
+        break;
+    }
   });
+};
