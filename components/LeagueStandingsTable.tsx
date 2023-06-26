@@ -1,6 +1,7 @@
 import React from 'react';
 import {Table, Text} from '@nextui-org/react';
 import {Team} from '@/graphql/generated-types';
+import Link from 'next/link';
 
 type LeagueStandingsProps = {
   leagueTeams: unknown[] | undefined | null;
@@ -57,6 +58,11 @@ export const LeagueStandingsTable = ({leagueTeams}: LeagueStandingsProps) => {
       case 'rank':
         return <Text>{item.rank}</Text>;
       case 'name':
+        return (
+          <Text>
+            <Link href={`/team/${item.id}`}>{item[columnKey]}</Link>
+          </Text>
+        );
       case 'wins':
       case 'losses':
       case 'draws':

@@ -17,6 +17,7 @@ const GetLeagueDetailsQuery = gql`
       startDate
       endDate
       teams {
+        id
         name
         wins
         losses
@@ -28,9 +29,11 @@ const GetLeagueDetailsQuery = gql`
       games {
         id
         homeTeam {
+          id
           name
         }
         awayTeam {
+          id
           name
         }
         homeTeamScore
