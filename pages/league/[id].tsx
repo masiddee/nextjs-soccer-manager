@@ -6,6 +6,7 @@ import {format} from 'date-fns';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import {LeagueScheduleTable} from '@/components/LeagueScheduleTable';
 import {Game, League} from '@/graphql/generated-types';
+import {LeagueStandingsTable} from '@/components/LeagueStandingsTable';
 
 const GetLeagueDetailsQuery = gql`
   query getLeagueDetailsQuery($leagueId: Int!) {
@@ -16,15 +17,23 @@ const GetLeagueDetailsQuery = gql`
       startDate
       endDate
       teams {
+        id
         name
+        wins
+        losses
+        draws
+        pointsFor
+        pointsAgainst
       }
       teamsMax
       games {
         id
         homeTeam {
+          id
           name
         }
         awayTeam {
+          id
           name
         }
         homeTeamScore
@@ -99,6 +108,7 @@ const LeagueDetailPage = () => {
   );
   const {theme} = useTheme();
   const games = data?.getLeague.games;
+  const teams = data?.getLeague.teams;
 
   if (loading)
     return (
@@ -186,7 +196,7 @@ const LeagueDetailPage = () => {
             <LeagueScheduleTable leagueGames={transformGames(games)} />
           </TabPanel>
           <TabPanel>
-            <Text>TBD</Text>
+            <LeagueStandingsTable leagueTeams={teams} />
           </TabPanel>
         </Tabs>
       </Grid>

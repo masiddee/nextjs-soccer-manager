@@ -198,7 +198,13 @@ export default function TeamDetailPage() {
                             </Button>
                           </Grid>
                           <Grid>
-                            <Button auto light color="primary" onClick={() => router.push(`/player/${player?.id}`)}>
+                            <Button
+                              auto
+                              light
+                              color="primary"
+                              onClick={() =>
+                                router.push(`/player/${player?.id}`)
+                              }>
                               View player
                             </Button>
                           </Grid>

@@ -3,6 +3,7 @@ import {CheckIcon} from '@/public/icons';
 import {getFormattedDateTime} from '@/utils/helpers';
 import {Card, Table, Text} from '@nextui-org/react';
 import {FieldNumbers} from '@prisma/client';
+import Link from 'next/link';
 import React from 'react';
 
 type LeagueScheduleTableProps = {
@@ -96,7 +97,10 @@ export const LeagueScheduleTable = ({
               css={{fontFamily: '$mono'}}
               size={'$lg'}
               weight={cellValue.gameResult === 'HOME_WIN' ? 'bold' : 'normal'}>
-              {cellValue.homeTeam.name} - {cellValue.homeTeamScore}{' '}
+              <Link href={`/team/${cellValue.homeTeam.id}`}>
+                {cellValue.homeTeam.name}
+              </Link>{' '}
+              - {cellValue.homeTeamScore}{' '}
               {cellValue.gameResult === 'HOME_WIN' && (
                 <CheckIcon size={30} fill={'green'} />
               )}
@@ -106,7 +110,10 @@ export const LeagueScheduleTable = ({
               css={{fontFamily: '$mono'}}
               size={'$lg'}
               weight={cellValue.gameResult === 'AWAY_WIN' ? 'bold' : 'normal'}>
-              {cellValue.awayTeam.name} - {cellValue.awayTeamScore}{' '}
+              <Link href={`/team/${cellValue.awayTeam.id}`}>
+                {cellValue.awayTeam.name}
+              </Link>{' '}
+              - {cellValue.awayTeamScore}{' '}
               {cellValue.gameResult === 'AWAY_WIN' && (
                 <CheckIcon size={30} fill={'green'} />
               )}
