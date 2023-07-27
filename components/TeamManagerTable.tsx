@@ -1,64 +1,63 @@
 import {PlayerInviteData} from '@/pages/api/playerInvite';
 import {RemoveIcon} from '@/public/icons';
 import {validateEmail} from '@/utils/helpers';
-import {gql, useQuery} from '@apollo/client';
 import {Button, Card, Grid, Input, Link, Table, Text} from '@nextui-org/react';
 import axios from 'axios';
-import {useRouter} from 'next/router';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {User} from '@/graphql/generated-types';
+import {useRemovePlayerMutation} from '@/graphql/hooks/removePlayer';
 
-// type GetEmailBodyParams = {
-//   inviteLink: string;
-//   name: string;
-//   captainName: string;
-//   leagueName: string;
-// };
-
-// type GetEmailSubjectParams = {
-//   leagueName: string;
-//   captainName: string;
-// };
-
-type PlayerInfo = {
-  name: string;
-  email: string;
-  status?: string;
+type TeamManagerTableProps = {
+  teamId: number;
+  roster: User[];
+  rosterMax: number;
 };
+
+type RosterPlayer = Pick<
+  User,
+  'email' | 'firstName' | 'lastName' | 'id' | 'skillLevel' | 'status'
+>;
 
 type PlayerInviteResponse = {
   data: {
     message: string;
-    playerInfo: PlayerInfo;
+    rosterPlayer: RosterPlayer;
   };
 };
 
 type InputData = {
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
 };
 
-export default function TeamManager() {
+export default function TeamManagerTable({
+  teamId,
+  roster,
+  rosterMax,
+}: TeamManagerTableProps) {
   const columns: {name: string; uid: string}[] = [
-    {name: 'Name', uid: 'name'},
+    {name: 'First Name', uid: 'firstName'},
+    {name: 'Last Name', uid: 'lastName'},
     {name: 'Email', uid: 'email'},
     {name: 'Status', uid: 'status'},
     {name: '', uid: 'remove'},
   ];
-  const {query} = useRouter();
-  const teamId = Number(query.id?.toString());
-  // const {data, error, loading} = useQuery(gql``, {
-  //   variables: {teamId},
-  // });
-  const [teamPlayers, setTeamPlayers] = useState<PlayerInfo[]>([]);
+  const [teamPlayers, setTeamPlayers] = useState<RosterPlayer[]>(roster);
   const [inputData, setInputData] = useState<InputData>({
-    fullName: undefined,
+    firstName: undefined,
+    lastName: undefined,
     email: undefined,
   });
-  const rosterMax = 10;
-  const isTeamFull = teamPlayers.length >= rosterMax;
+  const isTeamFull = teamPlayers && teamPlayers.length >= rosterMax;
   const rosterLimitText = isTeamFull
     ? `Team Full. No more players can be added`
-    : `${teamPlayers.length} of ${rosterMax} Players Invited`;
+    : `${teamPlayers.length} of ${rosterMax} players addeds`;
+  const [removePlayer, {data, loading, error}] = useRemovePlayerMutation();
+
+  // useEffect(() => {
+  //   console.log({TEAM_ROSTER_CHANGE: roster});
+  // }, [roster]);
 
   const handleChange = (e: any) => {
     setInputData({...inputData, [e.target.name]: e.target.value});
@@ -70,29 +69,42 @@ export default function TeamManager() {
       args,
     );
 
-    const {playerInfo} = response.data;
-    setTeamPlayers([...teamPlayers, {...playerInfo, status: 'INVITED'}]);
-    setInputData({fullName: undefined, email: undefined});
+    const {rosterPlayer} = response.data;
+    setTeamPlayers([...teamPlayers, {...rosterPlayer}]);
+    setInputData({
+      firstName: undefined,
+      lastName: undefined,
+      email: undefined,
+    });
   };
 
-  const handleRemovePlayer = (player: PlayerInfo) => {
-    setTeamPlayers(teamPlayers.filter(_ => _.email !== player.email));
+  const handleRevokeInvitation = async (playerId: number) => {
+    try {
+      const {data} = await removePlayer({
+        variables: {input: {userId: playerId, teamId}},
+      });
+
+      setTeamPlayers(data.removePlayer.roster);
+    } catch (err) {
+      console.log({ERROR: err});
+    }
   };
 
-  const renderCell = (item: PlayerInfo, columnKey: React.Key) => {
+  const renderCell = (item: RosterPlayer, columnKey: React.Key) => {
     switch (columnKey) {
-      case 'name':
+      case 'firstName':
+      case 'lastName':
       case 'email':
       case 'status':
         return <Text>{item[columnKey]}</Text>;
       case 'remove':
-        return (
+        return item.status === 'INVITED' ? (
           <Link
-            aria-label="Remove Player"
-            onPress={() => handleRemovePlayer(item)}>
+            aria-label="Revoke Invitation"
+            onPress={() => handleRevokeInvitation(item.id)}>
             <RemoveIcon fill="grey" />
           </Link>
-        );
+        ) : null;
     }
   };
 
@@ -101,9 +113,19 @@ export default function TeamManager() {
       <Grid.Container gap={1} justify="center">
         <Grid xs={3}>
           <Input
-            aria-label="Full Name"
-            placeholder="Full Name"
-            name="fullName"
+            aria-label="First Name"
+            placeholder="First Name"
+            name="firstName"
+            fullWidth
+            disabled={isTeamFull}
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid xs={3}>
+          <Input
+            aria-label="Last Name"
+            placeholder="Last Name"
+            name="lastName"
             fullWidth
             disabled={isTeamFull}
             onChange={handleChange}
@@ -123,14 +145,20 @@ export default function TeamManager() {
           <Button
             disabled={isTeamFull}
             onPress={() => {
-              if (inputData.email && inputData.fullName) {
+              if (
+                inputData.email &&
+                inputData.firstName &&
+                inputData.lastName
+              ) {
                 if (validateEmail(inputData.email)) {
                   return handlePlayerInvite({
                     captainName: 'Super Man',
                     leagueName: 'MLS All-Stars',
-                    name: inputData.fullName,
+                    firstName: inputData.firstName,
+                    lastName: inputData.lastName,
                     inviteLink: 'https://www.google.com',
                     email: inputData.email,
+                    teamId,
                   });
                 } else {
                   alert('Please enter a valid email address.');
@@ -165,8 +193,8 @@ export default function TeamManager() {
                 )}
               </Table.Header>
               <Table.Body items={teamPlayers}>
-                {(item: PlayerInfo) => (
-                  <Table.Row key={item.email + item.name}>
+                {(item: RosterPlayer) => (
+                  <Table.Row key={item.email + item.id}>
                     {columnKey => (
                       <Table.Cell css={{textAlign: 'center'}}>
                         {renderCell(item, columnKey)}

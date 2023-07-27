@@ -1,4 +1,4 @@
-Dear ${name},
+Dear ${firstName} ${lastName},
 
 ${captainName}, has invited you to join a team in: ${leagueName}.
 

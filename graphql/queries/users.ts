@@ -17,6 +17,16 @@ export const userResolvers = {
     signUp: async () => {
       console.log('TEST');
     },
+    deleteUser: async (parent: any, {userId}: any, context: any, info: any) => {
+      // const user: User | null = (await context).user;
+
+      // if (!user) {
+      //   throw new Error('You need to be logged in to update this user');
+      // }
+
+      // return prisma.user.delete({where: {id: userId}});
+      console.log('DELETE USER', {userId});
+    },
     updateUser: async (
       parent: any,
       {userId, userInput}: any,

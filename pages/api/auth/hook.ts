@@ -18,8 +18,17 @@ const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (email) {
-    await prisma.user.create({
-      data: {
+    /** Using 'upsert' instead of 'create' to handle invited players that may exist in Prisma but not Auth0 just yet */
+    await prisma.user.upsert({
+      where: {
+        email,
+      },
+      update: {
+        externalUserId: user_id,
+        firstName: given_name,
+        lastName: family_name,
+      } as Prisma.UserCreateInput,
+      create: {
         email,
         externalUserId: user_id,
         firstName: given_name,

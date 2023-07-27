@@ -5,8 +5,9 @@ type Query {
 
 type Mutation {
   createTeam(input: CreateTeamInput!): Team
-  addTeamMember(input: AddTeamMemberInput!): Team
+  addPlayer(input: PlayerInput!): Team
   updateTeam(input: TeamInput!): Team
+  removePlayer(input: PlayerInput!): Team
 }
 
 input CreateTeamInput {
@@ -14,7 +15,7 @@ input CreateTeamInput {
   captainId: Int!
 }
 
-input AddTeamMemberInput {
+input PlayerInput {
   userId: Int!
   teamId: Int!
 }

@@ -1,57 +1,17 @@
-import {gql, useQuery} from '@apollo/client';
 import {Button, Card, Grid, Loading, Text, useTheme} from '@nextui-org/react';
 import {useRouter} from 'next/router';
 import React from 'react';
 import {format} from 'date-fns';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
-import {Maybe, Team, User} from '@/graphql/generated-types';
-import Link from 'next/link';
-
-const GetTeamDetailsQuery = gql`
-  query getTeamDetailsQuery($teamId: Int!) {
-    getTeam(teamId: $teamId) {
-      id
-      name
-      captain {
-        firstName
-        lastName
-      }
-      roster {
-        id
-        firstName
-        lastName
-        preferredPosition
-      }
-      rosterMax
-      rosterMin
-      feeStatus
-      division
-      wins
-      losses
-      draws
-      pointsFor
-      pointsAgainst
-      gamesHomeTeam {
-        id
-        homeTeamScore
-      }
-      leagues {
-        name
-      }
-      createdAt
-      modifiedAt
-    }
-  }
-`;
+import {Team, User} from '@/graphql/generated-types';
+import TeamManagerTable from '@/components/TeamManagerTable';
+import {useGetTeamDetailsQuery} from '@/graphql/hooks/getTeam';
 
 export default function TeamDetailPage() {
   const {query} = useRouter();
   const teamId = Number(query.id?.toString());
-  const {data, error, loading} = useQuery(GetTeamDetailsQuery, {
-    variables: {teamId},
-  });
+  const {data, error, loading} = useGetTeamDetailsQuery(teamId);
   const {theme} = useTheme();
-  const router = useRouter();
 
   if (loading)
     return (
@@ -177,7 +137,7 @@ export default function TeamDetailPage() {
               </Grid>
             </Grid.Container>
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <Grid.Container gap={2} justify="space-around">
               {team.roster?.map((player: Maybe<User>) => {
                 return (
@@ -215,6 +175,13 @@ export default function TeamDetailPage() {
                 );
               })}
             </Grid.Container>
+          </TabPanel> */}
+          <TabPanel>
+            <TeamManagerTable
+              teamId={team.id}
+              roster={team.roster as User[]}
+              rosterMax={team.rosterMax}
+            />
           </TabPanel>
           <TabPanel>
             <Text>TBD</Text>

@@ -6,6 +6,7 @@ type Query {
 type Mutation {
   signUp(email: String!): ID!
   updateUser(userId: Int!, userInput: UserInput): User!
+  deleteUser(userId: Int!): Boolean!
 }
 
 input UserInput {
