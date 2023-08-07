@@ -3,13 +3,14 @@ import {sendEmail} from '../../services/email';
 import {GetEmailBody} from '../../services/emailTemplateService';
 import prisma from '../../lib/prisma';
 import {Prisma} from '@prisma/client';
+import otpGenerator from 'otp-generator';
 
-export type PlayerInviteData = {
+export type SendInviteData = {
   firstName: string;
   lastName: string;
   captainName: string;
   leagueName: string;
-  inviteLink: string;
+  // inviteLink: string;
   email: string;
   teamId: number;
 };
@@ -22,16 +23,14 @@ export default async function handler(
     return res.status(405).send({message: 'Only post request allowed'});
   }
   try {
-    const {
-      firstName,
-      lastName,
-      captainName,
-      leagueName,
-      inviteLink,
-      email,
-      teamId,
-    } = req.body;
+    const {firstName, lastName, captainName, leagueName, email, teamId} =
+      req.body;
     const tempExternalUserId = `${email}-${teamId}-INVITED`; /** This is generated for newly invited users, and should be replaced with Auth0 sub ID on initial signup */
+    const otpCode = otpGenerator.generate(10, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/team/${teamId}/invite?otp=${otpCode}`;
     const bodyData = {
       email,
       firstName,
@@ -72,6 +71,7 @@ export default async function handler(
           teams: {
             connect: {id: teamId},
           },
+          // TODO: Need to add `inviteOtpCode` field to Prisma to DB to match with invite URL
         } as Prisma.UserCreateInput,
       });
 

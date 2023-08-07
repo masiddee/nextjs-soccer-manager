@@ -1,4 +1,4 @@
-import {PlayerInviteData} from '@/pages/api/playerInvite';
+import {SendInviteData} from '@/pages/api/sendInvite';
 import {RemoveIcon} from '@/public/icons';
 import {validateEmail} from '@/utils/helpers';
 import {Button, Card, Grid, Input, Link, Table, Text} from '@nextui-org/react';
@@ -18,7 +18,7 @@ type RosterPlayer = Pick<
   'email' | 'firstName' | 'lastName' | 'id' | 'skillLevel' | 'status'
 >;
 
-type PlayerInviteResponse = {
+type SendInviteResponse = {
   data: {
     message: string;
     rosterPlayer: RosterPlayer;
@@ -63,9 +63,9 @@ export default function TeamManagerTable({
     setInputData({...inputData, [e.target.name]: e.target.value});
   };
 
-  const handlePlayerInvite = async (args: PlayerInviteData) => {
-    const response = await axios.post<any, PlayerInviteResponse>(
-      'http://localhost:3000/api/playerInvite',
+  const handleSendInvite = async (args: SendInviteData) => {
+    const response = await axios.post<any, SendInviteResponse>(
+      'http://localhost:3000/api/sendInvite',
       args,
     );
 
@@ -151,12 +151,11 @@ export default function TeamManagerTable({
                 inputData.lastName
               ) {
                 if (validateEmail(inputData.email)) {
-                  return handlePlayerInvite({
+                  return handleSendInvite({
                     captainName: 'Super Man',
                     leagueName: 'MLS All-Stars',
                     firstName: inputData.firstName,
                     lastName: inputData.lastName,
-                    inviteLink: 'https://www.google.com',
                     email: inputData.email,
                     teamId,
                   });
