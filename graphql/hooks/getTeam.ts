@@ -1,7 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
 
 const GET_TEAM_DETAILS_QUERY = gql`
-  query getTeamDetailsQuery($teamId: Int!) {
+  query getTeamDetailsQuery($teamId: String!) {
     getTeam(teamId: $teamId) {
       id
       name
@@ -40,7 +40,7 @@ const GET_TEAM_DETAILS_QUERY = gql`
   }
 `;
 
-export const useGetTeamDetailsQuery = (teamId: number) =>
+export const useGetTeamDetailsQuery = (teamId: string) =>
   useQuery(GET_TEAM_DETAILS_QUERY, {
     variables: {teamId},
   });

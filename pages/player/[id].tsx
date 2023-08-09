@@ -5,7 +5,7 @@ import {useRouter} from 'next/router';
 import React from 'react';
 
 const GetPlayerDetailsQuery = gql`
-  query getPlayerDetailsQuery($playerId: Int!) {
+  query getPlayerDetailsQuery($playerId: String!) {
     getUser(userId: $playerId) {
       id
       firstName

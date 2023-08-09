@@ -1,10 +1,10 @@
 type Query {
-  getLeague(leagueId: Int!): League
+  getLeague(leagueId: String!): League
   getAllLeagues: [League]!
 }
 
 type League {
-  id: Int!
+  id: String!
   name: String!
   description: String
   startDate: String!
@@ -22,7 +22,7 @@ type League {
 }
 
 type Game {
-  id: Int!
+  id: String!
   homeTeam: Team!
   awayTeam: Team!
   homeTeamScore: Int

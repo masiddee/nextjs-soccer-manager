@@ -9,7 +9,7 @@ import {useGetTeamDetailsQuery} from '@/graphql/hooks/getTeam';
 
 export default function TeamDetailPage() {
   const {query} = useRouter();
-  const teamId = Number(query.id?.toString());
+  const teamId = query.id as string;
   const {data, error, loading} = useGetTeamDetailsQuery(teamId);
   const {theme} = useTheme();
 

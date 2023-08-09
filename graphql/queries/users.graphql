@@ -1,12 +1,12 @@
 type Query {
-  getUser(userId: Int!): User!
+  getUser(userId: String!): User!
   getAllUsers: [User]!
 }
 
 type Mutation {
   signUp(email: String!): ID!
-  updateUser(userId: Int!, userInput: UserInput): User!
-  deleteUser(userId: Int!): Boolean!
+  updateUser(userId: String!, userInput: UserInput): User!
+  deleteUser(userId: String!): Boolean!
 }
 
 input UserInput {
@@ -36,7 +36,6 @@ enum UserAccountStatus {
   INVITED
   JOINED
   DECLINED
-  CAPTAIN
 }
 
 enum UserGender {
@@ -53,8 +52,14 @@ enum PreferredPosition {
   WINGER
 }
 
+enum UserType {
+  PLAYER
+  CAPTAIN
+  ADMIN
+}
+
 type User {
-  id: Int!
+  id: String!
   firstName: String
   lastName: String
   gender: UserGender
@@ -71,6 +76,8 @@ type User {
   preferredPosition: PreferredPosition
   skillLevel: UserSkill
   captainInterest: Boolean
+  userType: UserType
+  inviteOtpCode: String
   # loginsCount: Int
   # lastLogin: String
   # createdBy: User

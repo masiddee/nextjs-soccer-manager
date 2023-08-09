@@ -68,10 +68,10 @@ export default async function handler(
           lastName,
           status: 'INVITED',
           externalUserId: tempExternalUserId,
+          inviteOtpCode: otpCode,
           teams: {
             connect: {id: teamId},
           },
-          // TODO: Need to add `inviteOtpCode` field to Prisma to DB to match with invite URL
         } as Prisma.UserCreateInput,
       });
 

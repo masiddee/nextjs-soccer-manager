@@ -1,5 +1,5 @@
 type Query {
-  getTeam(teamId: Int!): Team
+  getTeam(teamId: String!): Team
   getAllTeams: [Team]!
 }
 
@@ -12,24 +12,24 @@ type Mutation {
 
 input CreateTeamInput {
   name: String!
-  captainId: Int!
+  captainId: String!
 }
 
 input PlayerInput {
-  userId: Int!
-  teamId: Int!
+  userId: String!
+  teamId: String!
 }
 
 input TeamInput {
   name: String
-  captainId: Int
+  captainId: String
   roster: [UserInput]
   feeStatus: TeamFeeStatus
   division: Division
 }
 
 type Team {
-  id: Int!
+  id: String!
   name: String!
   captain: User!
   roster: [User]

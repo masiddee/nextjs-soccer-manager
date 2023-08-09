@@ -31,7 +31,8 @@ export default function Home() {
           )}
           <br />
           <Text>Check out our open Leagues!</Text>
-          <Button onClick={() => router.push('/league/1')}>
+          {/* TODO: Update this to pull in the actual leagueIds */}
+          <Button onClick={() => router.push('/league/dummyLeagueId-2')}>
             View our Leagues
           </Button>
         </Grid>

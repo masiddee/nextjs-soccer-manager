@@ -2,7 +2,7 @@ import {Prisma} from '@prisma/client';
 
 export const sampleAdminUsers: Prisma.UserUncheckedCreateInput[] = [
   {
-    externalUserId: '1',
+    externalUserId: '101',
     firstName: 'Mansoor',
     lastName: 'Siddeeq',
     email: 'mansoor.siddeeq@formidable.com',
@@ -14,7 +14,7 @@ export const sampleAdminUsers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'ADMIN',
   },
   {
-    externalUserId: '2',
+    externalUserId: '102',
     firstName: 'Alejandro',
     lastName: 'Butrón Pérez',
     email: 'alejandro.butron@formidable.com',
@@ -26,7 +26,7 @@ export const sampleAdminUsers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'ADMIN',
   },
   {
-    externalUserId: '3',
+    externalUserId: '103',
     firstName: 'Luis',
     lastName: 'Abarca',
     email: 'luis.abarca@formidable.com',
@@ -41,7 +41,7 @@ export const sampleAdminUsers: Prisma.UserUncheckedCreateInput[] = [
 
 export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
   {
-    externalUserId: '4',
+    externalUserId: '104',
     firstName: 'Giorgos',
     lastName: 'Giakoumakis',
     email: 'giakoumakis@domain.com',
@@ -53,7 +53,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'CAPTAIN',
   },
   {
-    externalUserId: '5',
+    externalUserId: '105',
     firstName: 'Thiago',
     lastName: 'Almada',
     email: 'almada@domain.com',
@@ -65,7 +65,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '6',
+    externalUserId: '106',
     firstName: 'Luiz',
     lastName: 'Araújo',
     email: 'araujo@domain.com',
@@ -77,7 +77,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '7',
+    externalUserId: '107',
     firstName: 'Caleb',
     lastName: 'Wiley',
     email: 'wiley@domain.com',
@@ -89,7 +89,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '8',
+    externalUserId: '108',
     firstName: 'Andrew',
     lastName: 'Gutman',
     email: 'gutman@domain.com',
@@ -101,7 +101,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '9',
+    externalUserId: '109',
     firstName: 'Tyler',
     lastName: 'Wolff',
     email: 'wolff@domain.com',
@@ -113,7 +113,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '10',
+    externalUserId: '110',
     firstName: 'Machop',
     lastName: 'Chol',
     email: 'chol@domain.com',
@@ -125,7 +125,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '11',
+    externalUserId: '111',
     firstName: 'Brooks',
     lastName: 'Lennon',
     email: 'lennon@domain.com',
@@ -137,7 +137,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '12',
+    externalUserId: '112',
     firstName: 'Matheus',
     lastName: 'Rossetto',
     email: 'rossetto@domain.com',
@@ -149,7 +149,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '13',
+    externalUserId: '113',
     firstName: 'Juan José',
     lastName: 'Sánchez Purata',
     email: 'purata@domain.com',
@@ -161,7 +161,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '14',
+    externalUserId: '114',
     firstName: 'Luis',
     lastName: 'Abram',
     email: 'abram@domain.com',
@@ -173,7 +173,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '15',
+    externalUserId: '115',
     firstName: 'Osvaldo',
     lastName: 'Alonso',
     email: 'alonso@domain.com',
@@ -185,7 +185,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '16',
+    externalUserId: '116',
     firstName: 'Miguel',
     lastName: 'Berry',
     email: 'berry@domain.com',
@@ -197,7 +197,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '17',
+    externalUserId: '117',
     firstName: 'Clément',
     lastName: 'Diop',
     email: 'diop@domain.com',
@@ -209,7 +209,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '18',
+    externalUserId: '118',
     firstName: 'Brad',
     lastName: 'Guzan',
     email: 'guzan@domain.com',
@@ -224,7 +224,7 @@ export const sampleAtlantaUnitedPlayers: Prisma.UserUncheckedCreateInput[] = [
 
 export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
   {
-    externalUserId: '19',
+    externalUserId: '119',
     firstName: 'Charlie',
     lastName: 'Asensio',
     email: 'asensio@domain.com',
@@ -236,7 +236,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '20',
+    externalUserId: '120',
     firstName: 'Matt',
     lastName: 'Bersano',
     email: 'bersano@domain.com',
@@ -248,7 +248,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '21',
+    externalUserId: '121',
     firstName: 'Will',
     lastName: 'Bruin',
     email: 'bruin@domain.com',
@@ -260,7 +260,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '22',
+    externalUserId: '122',
     firstName: 'Julio',
     lastName: 'Cascante',
     email: 'cascante@domain.com',
@@ -272,7 +272,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '23',
+    externalUserId: '123',
     firstName: 'Sofiane',
     lastName: 'Djeffal',
     email: 'djeffal@domain.com',
@@ -284,7 +284,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '24',
+    externalUserId: '124',
     firstName: 'Moussa',
     lastName: 'Djitté',
     email: 'djitte@domain.com',
@@ -296,7 +296,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '25',
+    externalUserId: '125',
     firstName: 'Sebastián',
     lastName: 'Driussi',
     email: 'driussi@domain.com',
@@ -308,7 +308,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '26',
+    externalUserId: '126',
     firstName: 'Diego',
     lastName: 'Fagundez',
     email: 'fagundez@domain.com',
@@ -320,7 +320,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '27',
+    externalUserId: '127',
     firstName: 'Ethan',
     lastName: 'Finlay',
     email: 'finlay@domain.com',
@@ -332,7 +332,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'CAPTAIN',
   },
   {
-    externalUserId: '28',
+    externalUserId: '128',
     firstName: 'Calvin Jay',
     lastName: 'Fodrey',
     email: 'fodrey@domain.com',
@@ -344,7 +344,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '29',
+    externalUserId: '129',
     firstName: 'Jon',
     lastName: 'Gallagher',
     email: 'gallagher@domain.com',
@@ -356,7 +356,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '30',
+    externalUserId: '130',
     firstName: 'Hector',
     lastName: 'Jimenez',
     email: 'jimenez@domain.com',
@@ -368,7 +368,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '31',
+    externalUserId: '131',
     firstName: 'Kipp',
     lastName: 'Keller',
     email: 'keller@domain.com',
@@ -380,7 +380,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '32',
+    externalUserId: '132',
     firstName: 'Zan',
     lastName: 'Kolmanic',
     email: 'kolmanic@domain.com',
@@ -392,7 +392,7 @@ export const sampleAustinFcPlayers: Prisma.UserUncheckedCreateInput[] = [
     userType: 'PLAYER',
   },
   {
-    externalUserId: '33',
+    externalUserId: '133',
     firstName: 'Damian',
     lastName: 'Las',
     email: 'las@domain.com',

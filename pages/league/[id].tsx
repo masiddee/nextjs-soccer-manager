@@ -9,7 +9,7 @@ import {Game, League} from '@/graphql/generated-types';
 import {LeagueStandingsTable} from '@/components/LeagueStandingsTable';
 
 const GetLeagueDetailsQuery = gql`
-  query getLeagueDetailsQuery($leagueId: Int!) {
+  query getLeagueDetailsQuery($leagueId: String!) {
     getLeague(leagueId: $leagueId) {
       id
       name
@@ -99,7 +99,7 @@ const transformGames = (
 
 const LeagueDetailPage = () => {
   const {query} = useRouter();
-  const leagueId = Number(query.id);
+  const leagueId = query.id;
   const {data, error, loading} = useQuery<GetLeagueDetailsQueryTypes>(
     GetLeagueDetailsQuery,
     {
