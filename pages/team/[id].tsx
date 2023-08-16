@@ -137,45 +137,6 @@ export default function TeamDetailPage() {
               </Grid>
             </Grid.Container>
           </TabPanel>
-          {/* <TabPanel>
-            <Grid.Container gap={2} justify="space-around">
-              {team.roster?.map((player: Maybe<User>) => {
-                return (
-                  <Grid xs={3} key={`player-${player?.id}`}>
-                    <Card>
-                      <Card.Body>
-                        <Text h3>
-                          {player?.firstName} {player?.lastName}
-                        </Text>
-
-                        <Text size="$xs">{player?.preferredPosition}</Text>
-                      </Card.Body>
-                      <Card.Footer>
-                        <Grid.Container gap={2} justify="space-around">
-                          <Grid>
-                            <Button auto flat>
-                              Edit
-                            </Button>
-                          </Grid>
-                          <Grid>
-                            <Button
-                              auto
-                              light
-                              color="primary"
-                              onClick={() =>
-                                router.push(`/player/${player?.id}`)
-                              }>
-                              View player
-                            </Button>
-                          </Grid>
-                        </Grid.Container>
-                      </Card.Footer>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid.Container>
-          </TabPanel> */}
           <TabPanel>
             <TeamManagerTable
               teamId={team.id}

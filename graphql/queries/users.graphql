@@ -1,5 +1,6 @@
 type Query {
-  getUser(userId: String!): User!
+  getUserById(userId: String!): User!
+  getUserByEmail(email: String!): User!
   getAllUsers: [User]!
 }
 
@@ -78,6 +79,7 @@ type User {
   captainInterest: Boolean
   userType: UserType
   inviteOtpCode: String
+  teams: [Team]
   # loginsCount: Int
   # lastLogin: String
   # createdBy: User

@@ -1,32 +1,14 @@
-import {gql, useQuery} from '@apollo/client';
+import {useGetPlayerDetailsByIdQuery} from '@/graphql/hooks/getPlayer';
 import {Button, Grid, Loading, Text, useTheme} from '@nextui-org/react';
 import {User} from '@prisma/client';
 import {useRouter} from 'next/router';
 import React from 'react';
 
-const GetPlayerDetailsQuery = gql`
-  query getPlayerDetailsQuery($playerId: String!) {
-    getUser(userId: $playerId) {
-      id
-      firstName
-      lastName
-      gender
-      email
-      preferredPosition
-      skillLevel
-    }
-  }
-`;
-
 const PlayerDetailPage = () => {
   const {query} = useRouter();
-  const playerId = Number(query.id);
-  const {data, error, loading} = useQuery(GetPlayerDetailsQuery, {
-    variables: {playerId},
-  });
+  const playerId = query.id as string;
+  const {data, error, loading} = useGetPlayerDetailsByIdQuery(playerId);
   const {theme} = useTheme();
-
-  console.log(data);
 
   if (loading)
     return (
@@ -48,7 +30,7 @@ const PlayerDetailPage = () => {
       </Grid.Container>
     );
 
-  const player: User | undefined = data.getUser;
+  const player: User | undefined = data.getUserById;
 
   if (!player) {
     return (

@@ -8,7 +8,7 @@ import {User} from '@/graphql/generated-types';
 import {useRemovePlayerMutation} from '@/graphql/hooks/removePlayer';
 
 type TeamManagerTableProps = {
-  teamId: number;
+  teamId: string;
   roster: User[];
   rosterMax: number;
 };
@@ -78,7 +78,7 @@ export default function TeamManagerTable({
     });
   };
 
-  const handleRevokeInvitation = async (playerId: number) => {
+  const handleRevokeInvitation = async (playerId: string) => {
     try {
       const {data} = await removePlayer({
         variables: {input: {userId: playerId, teamId}},

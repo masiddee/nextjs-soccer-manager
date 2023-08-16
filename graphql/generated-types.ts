@@ -14,13 +14,8 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type AddTeamMemberInput = {
-  teamId: Scalars['Int']['input'];
-  userId: Scalars['Int']['input'];
-};
-
 export type CreateTeamInput = {
-  captainId: Scalars['Int']['input'];
+  captainId: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -47,7 +42,7 @@ export type Game = {
   gameResult?: Maybe<GameResult>;
   homeTeam: Team;
   homeTeamScore?: Maybe<Scalars['Int']['output']>;
-  id: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   isForfeit?: Maybe<Scalars['Boolean']['output']>;
   league?: Maybe<League>;
   modifiedAt?: Maybe<Scalars['String']['output']>;
@@ -66,7 +61,7 @@ export type League = {
   description?: Maybe<Scalars['String']['output']>;
   endDate: Scalars['String']['output'];
   games?: Maybe<Array<Maybe<Game>>>;
-  id: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   leagueType?: Maybe<Array<Maybe<LeagueType>>>;
   location?: Maybe<Scalars['String']['output']>;
   modifiedAt?: Maybe<Scalars['String']['output']>;
@@ -93,21 +88,33 @@ export enum LeagueType {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addTeamMember?: Maybe<Team>;
+  addPlayer?: Maybe<Team>;
   createTeam?: Maybe<Team>;
+  deleteUser: Scalars['Boolean']['output'];
+  removePlayer?: Maybe<Team>;
   signUp: Scalars['ID']['output'];
   updateTeam?: Maybe<Team>;
   updateUser: User;
 };
 
 
-export type MutationAddTeamMemberArgs = {
-  input: AddTeamMemberInput;
+export type MutationAddPlayerArgs = {
+  input: PlayerInput;
 };
 
 
 export type MutationCreateTeamArgs = {
   input: CreateTeamInput;
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationRemovePlayerArgs = {
+  input: PlayerInput;
 };
 
 
@@ -122,8 +129,13 @@ export type MutationUpdateTeamArgs = {
 
 
 export type MutationUpdateUserArgs = {
-  userId: Scalars['Int']['input'];
+  userId: Scalars['String']['input'];
   userInput?: InputMaybe<UserInput>;
+};
+
+export type PlayerInput = {
+  teamId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export enum PreferredPosition {
@@ -141,22 +153,28 @@ export type Query = {
   getAllUsers: Array<Maybe<User>>;
   getLeague?: Maybe<League>;
   getTeam?: Maybe<Team>;
-  getUser: User;
+  getUserByEmail: User;
+  getUserById: User;
 };
 
 
 export type QueryGetLeagueArgs = {
-  leagueId: Scalars['Int']['input'];
+  leagueId: Scalars['String']['input'];
 };
 
 
 export type QueryGetTeamArgs = {
-  teamId: Scalars['Int']['input'];
+  teamId: Scalars['String']['input'];
 };
 
 
-export type QueryGetUserArgs = {
-  userId: Scalars['Int']['input'];
+export type QueryGetUserByEmailArgs = {
+  email: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserByIdArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type Team = {
@@ -169,7 +187,7 @@ export type Team = {
   feeStatus?: Maybe<TeamFeeStatus>;
   gamesAwayTeam?: Maybe<Array<Maybe<Game>>>;
   gamesHomeTeam?: Maybe<Array<Maybe<Game>>>;
-  id: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   leagues?: Maybe<Array<Maybe<League>>>;
   losses?: Maybe<Scalars['Int']['output']>;
   modifiedAt?: Maybe<Scalars['String']['output']>;
@@ -190,7 +208,7 @@ export enum TeamFeeStatus {
 }
 
 export type TeamInput = {
-  captainId?: InputMaybe<Scalars['Int']['input']>;
+  captainId?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Division>;
   feeStatus?: InputMaybe<TeamFeeStatus>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -209,7 +227,8 @@ export type User = {
   externalUserId: Scalars['String']['output'];
   firstName?: Maybe<Scalars['String']['output']>;
   gender?: Maybe<UserGender>;
-  id: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  inviteOtpCode?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   modifiedAt?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
@@ -217,11 +236,12 @@ export type User = {
   skillLevel?: Maybe<UserSkill>;
   state?: Maybe<Scalars['String']['output']>;
   status?: Maybe<UserAccountStatus>;
+  teams?: Maybe<Array<Maybe<Team>>>;
+  userType?: Maybe<UserType>;
   zip?: Maybe<Scalars['Int']['output']>;
 };
 
 export enum UserAccountStatus {
-  Captain = 'CAPTAIN',
   Declined = 'DECLINED',
   Invited = 'INVITED',
   Joined = 'JOINED'
@@ -253,4 +273,10 @@ export enum UserSkill {
   Advanced = 'ADVANCED',
   Beginner = 'BEGINNER',
   Intermediate = 'INTERMEDIATE'
+}
+
+export enum UserType {
+  Admin = 'ADMIN',
+  Captain = 'CAPTAIN',
+  Player = 'PLAYER'
 }

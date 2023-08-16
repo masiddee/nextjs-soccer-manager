@@ -2,10 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import {useUser} from '@auth0/nextjs-auth0/client';
 import {Grid, useTheme} from '@nextui-org/react';
+import {useRouter} from 'next/router';
 
 const Header = () => {
   const {user} = useUser();
   const {theme} = useTheme();
+  const {asPath} = useRouter();
+  const loginUrl = `/api/auth/login?returnTo=${process.env.NEXT_PUBLIC_APP_URL}${asPath}`;
 
   return (
     <Grid.Container
@@ -23,7 +26,7 @@ const Header = () => {
             </div>
           ) : (
             <div>
-              <Link href="/api/auth/login">Login</Link>
+              <Link href={loginUrl}>Login</Link>
             </div>
           )}
         </nav>

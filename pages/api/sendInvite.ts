@@ -12,7 +12,7 @@ export type SendInviteData = {
   leagueName: string;
   // inviteLink: string;
   email: string;
-  teamId: number;
+  teamId: string;
 };
 
 export default async function handler(
@@ -30,7 +30,9 @@ export default async function handler(
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/team/${teamId}/invite?otp=${otpCode}`;
+    const inviteLink = `${
+      process.env.NEXT_PUBLIC_APP_URL
+    }/team/${teamId}/invite?otp=${otpCode}&email=${encodeURIComponent(email)}`;
     const bodyData = {
       email,
       firstName,

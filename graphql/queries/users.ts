@@ -4,11 +4,24 @@ import prisma from '../../lib/prisma';
 
 export const userResolvers = {
   Query: {
-    getUser: async (parent: any, {userId}: any, context: any, info: any) => {
-      console.log('FIND USER!---- ');
-
+    getUserById: async (
+      parent: any,
+      {userId}: any,
+      context: any,
+      info: any,
+    ) => {
       return prisma.user.findFirst({
         where: {id: userId},
+      });
+    },
+    getUserByEmail: async (
+      parent: any,
+      {email}: any,
+      context: any,
+      info: any,
+    ) => {
+      return prisma.user.findFirst({
+        where: {email},
       });
     },
     getAllUsers: async () => prisma.user.findMany(),
@@ -45,6 +58,18 @@ export const userResolvers = {
         },
         data: {...userInput},
       });
+    },
+  },
+  User: {
+    teams: async (parent: any) => {
+      const playerTeams = await prisma.team.findMany({
+        where: {roster: {some: {id: parent.id}}},
+        include: {
+          captain: true,
+        },
+      });
+
+      return playerTeams;
     },
   },
 };
