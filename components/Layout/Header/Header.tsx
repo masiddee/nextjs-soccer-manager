@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {useUser} from '@auth0/nextjs-auth0/client';
-import {Grid, useTheme} from '@nextui-org/react';
+import {Grid, useTheme, Text} from '@nextui-org/react';
 import {useRouter} from 'next/router';
 
 const Header = () => {
@@ -22,6 +22,7 @@ const Header = () => {
         <nav>
           {user ? (
             <div>
+              <Text>Welcome, {user.email}</Text>
               <Link href="/api/auth/logout">Logout</Link>
             </div>
           ) : (
