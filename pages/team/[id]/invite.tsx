@@ -1,16 +1,21 @@
-import {Button, Grid, Input, Loading, Text, useTheme} from '@nextui-org/react';
+import {Button, Grid, Loading, Text, useTheme} from '@nextui-org/react';
 import {GetServerSideProps} from 'next';
-import {Team, User} from '@/graphql/generated-types';
+import {
+  PreferredPosition,
+  Team,
+  User,
+  UserGender,
+} from '@/graphql/generated-types';
 import React, {useState} from 'react';
 import {useRouter} from 'next/router';
 import {useGetPlayerDetailsByEmailQuery} from '@/graphql/hooks/getPlayer';
 import {useUser} from '@auth0/nextjs-auth0/client';
-
-type InputData = {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-};
+import {
+  PlayerInfoForm,
+  PlayerInfoFormFields,
+} from '@/components/PlayerInfoForm';
+import {Formik} from 'formik';
+import {useUpdateUserMutation} from '@/graphql/hooks/updateUser';
 
 const Invite = () => {
   const {asPath, ...router} = useRouter();
@@ -20,16 +25,9 @@ const Invite = () => {
   const {data, error, loading} = useGetPlayerDetailsByEmailQuery(
     (email ?? user?.email) as string,
   );
+  const [updateUser, {data: uData, loading: uLoading, error: uError}] =
+    useUpdateUserMutation();
   const loginUrl = `/api/auth/login?returnTo=${process.env.NEXT_PUBLIC_APP_URL}${asPath}`;
-  const [inputData, setInputData] = useState<InputData>({
-    firstName: undefined,
-    lastName: undefined,
-    email: undefined,
-  });
-
-  const handleChange = (e: any) => {
-    setInputData({...inputData, [e.target.name]: e.target.value});
-  };
 
   if (loading)
     return (
@@ -55,8 +53,13 @@ const Invite = () => {
   const team: Team | undefined | null = player?.teams?.find(
     team => team?.id === teamId,
   );
-
-  console.log({player, team, TEAM_ID: teamId});
+  const initialValues: PlayerInfoFormFields = {
+    firstName: player?.firstName ?? '',
+    lastName: player?.lastName ?? '',
+    preferredPosition: player?.preferredPosition ?? PreferredPosition['Goalie'],
+    gender: player?.gender ?? UserGender['Male'],
+    birthDate: player?.birthDate ?? '',
+  };
 
   if (player?.inviteOtpCode !== otp) {
     return (
@@ -128,59 +131,17 @@ const Invite = () => {
         </Grid>
 
         <Grid xs={6}>
-          <Input
-            aria-label="First Name"
-            label="First Name"
-            name="firstName"
-            fullWidth
-            disabled
-            initialValue={'Test First Name'}
-            onChange={handleChange}
-          />
-
-          <Input
-            aria-label="Last Name"
-            label="Last Name"
-            name="lastName"
-            fullWidth
-            // disabled
-            initialValue={'Test Last Name'}
-            onChange={handleChange}
-          />
-
-          <Input
-            aria-label="Preferred Position"
-            label="Preferred Position"
-            name="preferredPosition"
-            fullWidth
-            // disabled
-            initialValue={'STRIKER'}
-            onChange={handleChange}
-          />
-
-          <Input
-            aria-label="Gender"
-            label="Gender"
-            name="gender"
-            fullWidth
-            // disabled
-            initialValue={'MALE'}
-            onChange={handleChange}
-          />
-
-          <Input
-            aria-label="Birth Date"
-            label="Birth Date"
-            name="birthDate"
-            fullWidth
-            // disabled
-            initialValue={'01/01/1990'}
-            onChange={handleChange}
-          />
-
-          <Button onClick={() => router.push('/league/dummyLeagueId-2')}>
-            Confirm Registration
-          </Button>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={async (values, {setSubmitting}) => {
+              console.log('**** ON SUBMIT VALUES: ', {values});
+              await updateUser({
+                variables: {userId: player?.id, userInput: values},
+              });
+              setSubmitting(false);
+            }}>
+            <PlayerInfoForm />
+          </Formik>
         </Grid>
       </Grid.Container>
     );

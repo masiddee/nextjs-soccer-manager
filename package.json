@@ -27,6 +27,7 @@
     "date-fns": "^2.30.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.3.0",
+    "formik": "^2.4.3",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.9.0",
     "just-merge": "^3.2.0",

@@ -47,17 +47,22 @@ export const userResolvers = {
       info: any,
     ) => {
       const user: User | null = (await context).user;
+      console.log('============== RESOLVER: ', {
+        sessionUser: user,
+        userId,
+        userInput,
+      });
 
       if (!user) {
         throw new Error('You need to be logged in to update this user');
       }
 
-      return prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {...userInput},
-      });
+      // return prisma.user.update({
+      //   where: {
+      //     id: userId,
+      //   },
+      //   data: {...input},
+      // });
     },
   },
   User: {

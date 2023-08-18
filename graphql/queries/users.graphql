@@ -25,6 +25,7 @@ input UserInput {
   birthDate: String
   skillLevel: UserSkill
   captainInterest: Boolean
+  preferredPosition: PreferredPosition
 }
 
 enum UserSkill {
