@@ -6,80 +6,80 @@ datasource db {
   provider          = "postgresql"
   url               = env("POSTGRES_PRISMA_URL")
   directUrl         = env("POSTGRES_URL_NON_POOLING")
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+  // shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model League {
-  id             Int           @id @default(autoincrement())
+  id             String          @id @default(uuid())
   name           String
   description    String?
   season         String
   startDate      DateTime
   endDate        DateTime
-  teamsMax       Int           @default(24)
+  teamsMax       Int             @default(24)
   location       String?
   leagueType     LeagueType[]
   status         LeagueStatus?
   signupDeadline DateTime?
-  createdAt      DateTime      @default(now())
-  createdById    Int
-  modifiedAt     DateTime      @default(now())
+  createdAt      DateTime        @default(now())
+  createdById    String
+  modifiedAt     DateTime        @default(now())
   games          Game[]
-  createdBy      User          @relation("CreatedBy", fields: [createdById], references: [id])
+  createdBy      User            @relation("CreatedBy", fields: [createdById], references: [id])
   teams          Team[]
 }
 
 model Game {
-  id            Int           @id @default(autoincrement())
-  homeTeamId    Int
-  awayTeamId    Int
-  homeTeamScore Int           @default(0)
-  awayTeamScore Int           @default(0)
+  id            String           @id @default(uuid())
+  homeTeamId    String
+  awayTeamId    String
+  homeTeamScore Int              @default(0)
+  awayTeamScore Int              @default(0)
   field         FieldNumbers?
-  leagueId      Int
+  leagueId      String
   gameDateTime  DateTime?
   gameResult    GameResult?
   isForfeit     Boolean?
-  createdAt     DateTime      @default(now())
-  createdById   Int
-  modifiedAt    DateTime      @default(now())
-  awayTeam      Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  createdBy     User          @relation("CreatedBy", fields: [createdById], references: [id])
-  homeTeam      Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  league        League        @relation(fields: [leagueId], references: [id])
+  createdAt     DateTime         @default(now())
+  createdById   String
+  modifiedAt    DateTime         @default(now())
+  awayTeam      Team             @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  createdBy     User             @relation("CreatedBy", fields: [createdById], references: [id])
+  homeTeam      Team             @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  league        League           @relation(fields: [leagueId], references: [id])
 }
 
 model Team {
-  id            Int           @id @default(autoincrement())
+  id            String           @id @default(uuid())
   name          String
-  captainId     Int
-  rosterMax     Int           @default(16)
-  rosterMin     Int           @default(0)
+  captainId     String
+  rosterMax     Int              @default(16)
+  rosterMin     Int              @default(0)
   feeStatus     TeamFeeStatus
   division      Division
-  wins          Int           @default(0)
-  losses        Int           @default(0)
-  draws         Int           @default(0)
-  pointsFor     Int           @default(0)
-  pointsAgainst Int           @default(0)
-  leagueId      Int?
-  createdAt     DateTime      @default(now())
-  createdById   Int
-  modifiedAt    DateTime      @default(now())
-  gamesAwayTeam Game[]        @relation("AwayTeam")
-  gamesHomeTeam Game[]        @relation("HomeTeam")
-  captain       User          @relation("Captain", fields: [captainId], references: [id])
-  createdBy     User          @relation("CreatedBy", fields: [createdById], references: [id])
-  league        League?       @relation(fields: [leagueId], references: [id])
-  roster        User[]        @relation("TeamToUser")
+  wins          Int              @default(0)
+  losses        Int              @default(0)
+  draws         Int              @default(0)
+  pointsFor     Int              @default(0)
+  pointsAgainst Int              @default(0)
+  leagueId      String?
+  createdAt     DateTime         @default(now())
+  createdById   String
+  modifiedAt    DateTime         @default(now())
+  gamesAwayTeam Game[]           @relation("AwayTeam")
+  gamesHomeTeam Game[]           @relation("HomeTeam")
+  captain       User             @relation("Captain", fields: [captainId], references: [id])
+  createdBy     User             @relation("CreatedBy", fields: [createdById], references: [id])
+  league        League?          @relation(fields: [leagueId], references: [id])
+  roster        User[]           @relation("TeamToUser")
 }
 
 model User {
-  id                Int                @id @default(autoincrement())
-  externalUserId    String             @unique
+  id                String                @id @default(uuid())
+  externalUserId    String                @unique
   firstName         String?
   lastName          String?
-  email             String             @unique
+  email             String                @unique
   phone             String?
   gender            UserGender?
   preferredPosition PreferredPosition?
@@ -93,13 +93,14 @@ model User {
   birthDate         String?
   captainInterest   Boolean?
   userType          UserType?
-  createdAt         DateTime           @default(now())
-  modifiedAt        DateTime           @default(now())
-  createdGames      Game[]             @relation("CreatedBy")
-  createdLeagues    League[]           @relation("CreatedBy")
-  captainTeams      Team[]             @relation("Captain")
-  createdTeams      Team[]             @relation("CreatedBy")
-  teams             Team[]             @relation("TeamToUser")
+  inviteOtpCode     String?
+  createdAt         DateTime              @default(now())
+  modifiedAt        DateTime              @default(now())
+  createdGames      Game[]                @relation("CreatedBy")
+  createdLeagues    League[]              @relation("CreatedBy")
+  captainTeams      Team[]                @relation("Captain")
+  createdTeams      Team[]                @relation("CreatedBy")
+  teams             Team[]                @relation("TeamToUser")
 }
 
 enum GameResult {

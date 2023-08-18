@@ -13,7 +13,7 @@ export const teamResolvers = {
           league: true,
           createdBy: true,
         },
-      })
+      });
     },
     getAllTeams: async () => {
       const teams: any = await prisma.team.findMany();
@@ -21,6 +21,15 @@ export const teamResolvers = {
       return teams;
     },
   },
+  // Team: {
+  //   roster: async (parent: any) => {
+  //     // const __roster = await prisma.user.findMany({ include: {teams: {include: {users}}}})
+  //     console.log({parent});
+  //   },
+  //   leagues: async () => {},
+  //   gamesHomeTeam: async () => {},
+  //   gamesAwayTeam: async () => {},
+  // },
   Mutation: {
     createTeam: async (parent: any, {input}: any, context: any) => {
       const user: User | null = (await context).user;
@@ -43,7 +52,7 @@ export const teamResolvers = {
         data,
       });
     },
-    addTeamMember: async (parent: any, {input}: any, context: any) => {
+    addPlayer: async (parent: any, {input}: any, context: any) => {
       const user: User | null = (await context).user;
 
       if (!user) {
@@ -62,6 +71,41 @@ export const teamResolvers = {
           },
         },
       });
+    },
+    removePlayer: async (
+      parent: any,
+      {input: {userId, teamId}}: any,
+      context: any,
+    ) => {
+      const user: User | null = (await context).user;
+
+      if (!user) {
+        throw new Error('You need to be logged in to remove a player.');
+      }
+
+      const team = await prisma.team.findFirstOrThrow({where: {id: teamId}});
+      const isTeamCaptain = team.captainId === user.id;
+
+      if (!isTeamCaptain) {
+        throw new Error(
+          'You must be team captain to remove this player from the team.',
+        );
+      }
+
+      const updatedTeam = await prisma.team.update({
+        where: {id: teamId},
+        data: {
+          roster: {disconnect: {id: userId}},
+        },
+        include: {
+          captain: true,
+          roster: true,
+          league: true,
+          createdBy: true,
+        },
+      });
+
+      return updatedTeam;
     },
     updateTeam: async () => console.log('UPDATE TEAM!'),
   },
