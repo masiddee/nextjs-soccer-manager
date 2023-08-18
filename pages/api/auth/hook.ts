@@ -10,10 +10,15 @@ const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     req.body as RequestBodyAuth0User;
 
   if (req.method !== 'POST') {
+    console.log('**** STATUS 403: GET Method not allowed');
     return res.status(403).json({message: 'Method not allowed'});
   }
 
   if (secret !== process.env.AUTH0_HOOK_SECRET) {
+    console.log('**** STATUS 403: No AUTH0 Secret Provided', {
+      SECRET: secret,
+      AUTH0: process.env.AUTH0_HOOK_SECRET,
+    });
     return res.status(403).json({message: `You must provide the secret 🤫`});
   }
 
