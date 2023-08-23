@@ -57,12 +57,12 @@ export const userResolvers = {
         throw new Error('You need to be logged in to update this user');
       }
 
-      // return prisma.user.update({
-      //   where: {
-      //     id: userId,
-      //   },
-      //   data: {...input},
-      // });
+      return prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {...userInput},
+      });
     },
   },
   User: {

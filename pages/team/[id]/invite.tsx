@@ -134,10 +134,19 @@ const Invite = () => {
           <Formik
             initialValues={initialValues}
             onSubmit={async (values, {setSubmitting}) => {
-              console.log('**** ON SUBMIT VALUES: ', {values});
-              await updateUser({
-                variables: {userId: player?.id, userInput: values},
-              });
+              const formattedValues = {
+                ...values,
+                gender: (values.gender as any).currentKey,
+                preferredPosition: (values.preferredPosition as any).currentKey,
+              };
+              try {
+                await updateUser({
+                  variables: {userId: player?.id, userInput: formattedValues},
+                });
+                router.push(`/team/${teamId}`);
+              } catch (e) {
+                console.log('ERROR', {e});
+              }
               setSubmitting(false);
             }}>
             <PlayerInfoForm />
