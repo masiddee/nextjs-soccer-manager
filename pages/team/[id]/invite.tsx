@@ -4,7 +4,9 @@ import {
   PreferredPosition,
   Team,
   User,
+  UserAccountStatus,
   UserGender,
+  UserSkill,
 } from '@/graphql/generated-types';
 import React, {useState} from 'react';
 import {useRouter} from 'next/router';
@@ -58,6 +60,7 @@ const Invite = () => {
     lastName: player?.lastName ?? '',
     preferredPosition: player?.preferredPosition ?? PreferredPosition['Goalie'],
     gender: player?.gender ?? UserGender['Male'],
+    skillLevel: player?.skillLevel ?? UserSkill['Beginner'],
     birthDate: player?.birthDate ?? '',
   };
 
@@ -136,8 +139,15 @@ const Invite = () => {
             onSubmit={async (values, {setSubmitting}) => {
               const formattedValues = {
                 ...values,
-                gender: (values.gender as any).currentKey,
-                preferredPosition: (values.preferredPosition as any).currentKey,
+                gender:
+                  typeof values.gender === 'object'
+                    ? (values.gender as any).currentKey
+                    : values.gender,
+                preferredPosition:
+                  typeof values.preferredPosition === 'object'
+                    ? (values.preferredPosition as any).currentKey
+                    : values.preferredPosition,
+                status: UserAccountStatus.Joined,
               };
               try {
                 await updateUser({
