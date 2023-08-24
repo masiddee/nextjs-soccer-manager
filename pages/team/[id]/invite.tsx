@@ -4,7 +4,9 @@ import {
   PreferredPosition,
   Team,
   User,
+  UserAccountStatus,
   UserGender,
+  UserSkill,
 } from '@/graphql/generated-types';
 import React, {useState} from 'react';
 import {useRouter} from 'next/router';
@@ -58,6 +60,7 @@ const Invite = () => {
     lastName: player?.lastName ?? '',
     preferredPosition: player?.preferredPosition ?? PreferredPosition['Goalie'],
     gender: player?.gender ?? UserGender['Male'],
+    skillLevel: player?.skillLevel ?? UserSkill['Beginner'],
     birthDate: player?.birthDate ?? '',
   };
 
@@ -134,10 +137,26 @@ const Invite = () => {
           <Formik
             initialValues={initialValues}
             onSubmit={async (values, {setSubmitting}) => {
-              console.log('**** ON SUBMIT VALUES: ', {values});
-              await updateUser({
-                variables: {userId: player?.id, userInput: values},
-              });
+              const formattedValues = {
+                ...values,
+                gender:
+                  typeof values.gender === 'object'
+                    ? (values.gender as any).currentKey
+                    : values.gender,
+                preferredPosition:
+                  typeof values.preferredPosition === 'object'
+                    ? (values.preferredPosition as any).currentKey
+                    : values.preferredPosition,
+                status: UserAccountStatus.Joined,
+              };
+              try {
+                await updateUser({
+                  variables: {userId: player?.id, userInput: formattedValues},
+                });
+                router.push(`/team/${teamId}`);
+              } catch (e) {
+                console.log('ERROR', {e});
+              }
               setSubmitting(false);
             }}>
             <PlayerInfoForm />

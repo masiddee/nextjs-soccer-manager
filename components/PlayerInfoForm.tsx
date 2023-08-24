@@ -1,4 +1,8 @@
-import {PreferredPosition, UserGender} from '@/graphql/generated-types';
+import {
+  PreferredPosition,
+  UserGender,
+  UserSkill,
+} from '@/graphql/generated-types';
 import {Button, Input} from '@nextui-org/react';
 import {Field, useFormikContext} from 'formik';
 import React from 'react';
@@ -9,6 +13,7 @@ export interface PlayerInfoFormFields {
   lastName: string;
   preferredPosition: PreferredPosition;
   gender: UserGender;
+  skillLevel: UserSkill;
   birthDate: string;
 }
 
@@ -24,6 +29,12 @@ const GENDER_OPTIONS = [
   {key: 'MALE', label: 'Male'},
   {key: 'FEMALE', label: 'Female'},
   {key: 'OTHER', label: 'Other'},
+];
+
+const SKILL_LEVEL_OPTIONS = [
+  {key: 'BEGINNER', label: 'Beginner'},
+  {key: 'INTERMEDIATE', label: 'Intermediate'},
+  {key: 'ADVANCED', label: 'Advanced'},
 ];
 
 export const PlayerInfoForm = () => {
@@ -74,6 +85,11 @@ export const PlayerInfoForm = () => {
           options={GENDER_OPTIONS}
           name="gender"
           fieldLabel="Gender"
+        />
+        <SelectDropdown
+          options={SKILL_LEVEL_OPTIONS}
+          name="skillLevel"
+          fieldLabel="Skill Level"
         />
         <Button onClick={() => handleSubmit()}>Confirm Registration</Button>
       </form>
