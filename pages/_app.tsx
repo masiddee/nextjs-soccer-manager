@@ -6,6 +6,7 @@ import {globalCss, NextUIProvider} from '@nextui-org/react';
 import {customTheme} from '../styles/nextui.theme';
 import '@/styles/globals.css';
 import Layout from '@/components/Layout';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const globalStyles = globalCss({
   body: {
@@ -22,7 +23,9 @@ export default function App({Component, pageProps}: AppProps) {
       <ApolloProvider client={apolloClient}>
         <NextUIProvider theme={customTheme}>
           <Layout>
-            <Component {...pageProps} />
+            <ErrorBoundary fallback={<h1>Something went wrong...</h1>}>
+              <Component {...pageProps} />
+            </ErrorBoundary>
           </Layout>
         </NextUIProvider>
       </ApolloProvider>
